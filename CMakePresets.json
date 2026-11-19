@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "x64-debug",
+      "displayName": "x64 Debug (vcpkg)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/x64-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_MAKE_PROGRAM": "C:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe",
+        "CMAKE_TOOLCHAIN_FILE": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    }
+  ]
+}

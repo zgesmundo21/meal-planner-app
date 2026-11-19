@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/blds/curl/x64-windows-rel/cmake_install.cmake",
+		"C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/blds/curl/x64-windows-rel/scripts/cmake_install.cmake",
+		"C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/blds/curl/x64-windows-rel/lib/cmake_install.cmake",
+		"C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/blds/curl/x64-windows-rel/docs/examples/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

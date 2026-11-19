@@ -1,0 +1,159 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CURL::ZLIB::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CURL__ZLIB-Debug-fa78282049880e371d2b.json",
+					"name" : "CURL::ZLIB",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CURL::libcurl_shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CURL__libcurl_shared-Debug-98eba6df493adaef0bd0.json",
+					"name" : "CURL::libcurl_shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CURL::win32_winsock::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CURL__win32_winsock-Debug-669efd9feea2ee669fcb.json",
+					"name" : "CURL::win32_winsock",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZLIB::ZLIB::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZLIB__ZLIB-Debug-8cd07a294e348d197e75.json",
+					"name" : "ZLIB::ZLIB",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cpr::cpr::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cpr__cpr-Debug-fc6995ac57701de35ba0.json",
+					"name" : "cpr::cpr",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "fmt::fmt::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fmt__fmt-Debug-825679a48e256527abbe.json",
+					"name" : "fmt::fmt",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "fmt::fmt-c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fmt__fmt-c-Debug-672cef942d229560b2b1.json",
+					"name" : "fmt::fmt-c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "fmt::fmt-header-only::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fmt__fmt-header-only-Debug-36de4f14682c361946fd.json",
+					"name" : "fmt::fmt-header-only",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nlohmann_json::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nlohmann_json-Debug-c5e86fd2045524ab2977.json",
+					"name" : "nlohmann_json",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nlohmann_json::nlohmann_json::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nlohmann_json__nlohmann_json-Debug-79abe105460981161170.json",
+					"name" : "nlohmann_json::nlohmann_json",
+					"projectIndex" : 0
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					],
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f040eec181a89de70dbe.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "MealPlanner",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "MealPlanner::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-MealPlanner-Debug-c3edc014b82dfb162385.json",
+					"name" : "MealPlanner",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/roshn/source/repos/meal-planner-app/out/build/x64-debug",
+		"source" : "C:/Users/roshn/source/repos/meal-planner-app"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	}
+}

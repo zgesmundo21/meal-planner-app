@@ -1,0 +1,29 @@
+Downloading https://github.com/libcpr/cpr/archive/1.14.2.tar.gz -> libcpr-cpr-1.14.2.tar.gz
+Successfully downloaded libcpr-cpr-1.14.2.tar.gz
+-- Extracting source C:/Users/roshn/AppData/Local/vcpkg/downloads/libcpr-cpr-1.14.2.tar.gz
+-- Applying patch disable_werror.patch
+-- Using source at C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/blds/cpr/src/1.14.2-af7a08bbf1.clean
+-- Configuring x64-windows
+CMake Warning at C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg_cmake_configure.cmake:346 (message):
+  The following variables are not used in CMakeLists.txt:
+
+      ADDRESS_SANITIZER_AVAILABLE
+      ALL_SANITIZERS_AVAILABLE
+      LEAK_SANITIZER_AVAILABLE
+      THREAD_SANITIZER_AVAILABLE
+      UNDEFINED_BEHAVIOUR_SANITIZER_AVAILABLE
+
+  Please recheck them and remove the unnecessary options from the
+  `vcpkg_cmake_configure` call.
+
+  If these options should still be passed for whatever reason, please use the
+  `MAYBE_UNUSED_VARIABLES` argument.
+Call Stack (most recent call first):
+  C:/Users/roshn/AppData/Local/vcpkg/registries/git-trees/9831fce6b2847eab6889364642da31eb7a13f02f/portfile.cmake:16 (vcpkg_cmake_configure)
+  scripts/ports.cmake:209 (include)
+
+
+-- Building x64-windows-dbg
+-- Building x64-windows-rel
+-- Installing: C:/Users/roshn/source/repos/meal-planner-app/vcpkg_installed/vcpkg/pkgs/cpr_x64-windows/share/cpr/copyright
+-- Performing post-build validation

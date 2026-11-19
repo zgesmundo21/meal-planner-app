@@ -1,0 +1,17 @@
+# ninja log v7
+150	7995	8167696915777257	CMakeFiles/MealPlanner.dir/Meal.cpp.obj	419345de9d9c0907
+305	8345	8167696917302005	CMakeFiles/MealPlanner.dir/Favorites.cpp.obj	468f5da3a1326b0b
+87	8351	8167696915125164	CMakeFiles/MealPlanner.dir/MealPlanner.cpp.obj	686a0ca48a5ddd9b
+372	8357	8167696917999399	CMakeFiles/MealPlanner.dir/GroceryList.cpp.obj	23eca60c718ca91e
+233	13847	8167696916597252	CMakeFiles/MealPlanner.dir/AIClient.cpp.obj	d5bd3356ad9aa17c
+177	14733	8167696916027256	CMakeFiles/MealPlanner.dir/SpoonacularClient.cpp.obj	139db3af257e882f
+14792	16865	8167697062166388	MealPlanner.exe	2002fe9f176aa1fb
+65	8765	8167702546599913	build.ninja	94b06f8f32cd2cf2
+65	8765	8167702546599913	C:/Users/roshn/source/repos/meal-planner-app/out/build/x64-debug/cmake_install.cmake	94b06f8f32cd2cf2
+45	1205	8167702549085228	CMakeFiles/MealPlanner.dir/Meal.cpp.obj	6e8d372c36243ff2
+95	1724	8167702549580893	CMakeFiles/MealPlanner.dir/Favorites.cpp.obj	b28ce1f3d340e617
+34	1796	8167702548975779	CMakeFiles/MealPlanner.dir/MealPlanner.cpp.obj	ca5d084ca6b10bb8
+113	1876	8167702549764103	CMakeFiles/MealPlanner.dir/GroceryList.cpp.obj	aded7d88478960e1
+77	6114	8167702549392206	CMakeFiles/MealPlanner.dir/AIClient.cpp.obj	10866d3a18f06c04
+62	6579	8167702549252166	CMakeFiles/MealPlanner.dir/SpoonacularClient.cpp.obj	b575085cb5a1ff48
+6580	8287	8167702614431119	MealPlanner.exe	2002fe9f176aa1fb

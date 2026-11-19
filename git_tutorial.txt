@@ -5,3 +5,12 @@ git commit -m "<put commit message here>"
 git push
 
 You should sprinkle "git status" before and after all git commands
+
+The following commands require an internet connection:
+git pull
+git push
+
+The following commands do not require an internet connection:
+git commit
+git add
+git status

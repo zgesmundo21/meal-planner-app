@@ -147,7 +147,7 @@ std::string AIClient::generateMealPlanFromRecipes(
         "- Use dinner recipes for dinner.\n"
         "- Avoid desserts unless no suitable alternative exists.\n"
         "- Maximize variety.\n"
-        "- Do not repeat the same meal on consecutive days.\n";
+        "- Do not repeat the same meal on consecutive days.\n"
 
         "Return ONLY this format:\n\n"
 

@@ -1,0 +1,7 @@
+git status
+git pull
+git add --all
+git commit -m "<put commit message here>"
+git push
+
+You should sprinkle "git status" before and after all git commands

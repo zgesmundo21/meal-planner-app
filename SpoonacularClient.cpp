@@ -2,19 +2,50 @@
 
 #include <iostream>
 #include <regex>
+#include <cstdlib>
+#include <string>
 
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
+namespace
+{
+    std::string readSpoonacularApiKey()
+    {
+        char* value = nullptr;
+
+        if (_dupenv_s(
+            &value,
+            nullptr,
+            "SPOONACULAR_API_KEY") != 0
+            || value == nullptr)
+        {
+            return {};
+        }
+
+        std::string key(value);
+
+        std::free(value);
+
+        return key;
+    }
+}
+
 std::vector<Meal> SpoonacularClient::searchMeals(
     const std::string& query)
 {
     std::vector<Meal> meals;
 
-    std::string apiKey =
-        "eaac0fe3cdfa4a6eaffb356434af39aa";
+    std::string apiKey = readSpoonacularApiKey();
+
+    if (apiKey.empty())
+    {
+        std::cerr << "Spoonacular API key not found."
+            << std::endl;
+        return meals;
+    }
 
     auto response =
         cpr::Get(
@@ -71,8 +102,14 @@ std::vector<Meal> SpoonacularClient::searchMeals(
 void SpoonacularClient::displayRecipeDetails(
     int recipeId)
 {
-    std::string apiKey =
-        "eaac0fe3cdfa4a6eaffb356434af39aa";
+    std::string apiKey = readSpoonacularApiKey();
+
+    if (apiKey.empty())
+    {
+        std::cerr << "Spoonacular API key not found."
+            << std::endl;
+        return;
+    }
 
     std::string url =
         "https://api.spoonacular.com/recipes/"
@@ -143,7 +180,7 @@ void SpoonacularClient::displayRecipeDetails(
 
     if (data.contains("nutrition"))
     {
-        auto nutrients =
+        const auto& nutrients =
             data["nutrition"]["nutrients"];
 
         for (auto& nutrient :
@@ -261,7 +298,7 @@ void SpoonacularClient::displayRecipeDetails(
     if (data.contains("analyzedInstructions") &&
         !data["analyzedInstructions"].empty())
     {
-        auto steps =
+        const auto& steps =
             data["analyzedInstructions"][0]["steps"];
 
         for (auto& step :
@@ -323,8 +360,14 @@ std::vector<Meal> SpoonacularClient::getHealthyRecipes(
 {
     std::vector<Meal> meals;
 
-    std::string apiKey =
-        "eaac0fe3cdfa4a6eaffb356434af39aa";
+    std::string apiKey = readSpoonacularApiKey();
+
+    if (apiKey.empty())
+    {
+        std::cerr << "Spoonacular API key not found."
+            << std::endl;
+        return meals;
+    }
 
     auto response =
         cpr::Get(
@@ -376,8 +419,14 @@ std::vector<std::string> SpoonacularClient::getIngredients(
 {
     std::vector<std::string> ingredients;
 
-    std::string apiKey =
-        "eaac0fe3cdfa4a6eaffb356434af39aa";
+    std::string apiKey = readSpoonacularApiKey();
+
+    if (apiKey.empty())
+    {
+        std::cerr << "Spoonacular API key not found."
+            << std::endl;
+        return ingredients;
+    }
 
     std::string url =
         "https://api.spoonacular.com/recipes/"
@@ -416,8 +465,14 @@ std::vector<std::string> SpoonacularClient::getEquipment(
 {
     std::vector<std::string> equipmentList;
 
-    std::string apiKey =
-        "eaac0fe3cdfa4a6eaffb356434af39aa";
+    std::string apiKey = readSpoonacularApiKey();
+
+    if (apiKey.empty())
+    {
+        std::cerr << "Spoonacular API key not found."
+            << std::endl;
+        return equipmentList;
+    }
 
     std::string url =
         "https://api.spoonacular.com/recipes/"

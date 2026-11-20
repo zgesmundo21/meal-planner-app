@@ -58,3 +58,13 @@
 8250	11294	8168496461607147	MealPlanner.exe	2002fe9f176aa1fb
 19	6037	8168497933346317	CMakeFiles/MealPlanner.dir/AIClient.cpp.obj	10866d3a18f06c04
 6042	7172	8168497993567310	MealPlanner.exe	2002fe9f176aa1fb
+44	7006	8168521280523320	CMakeFiles/MealPlanner.dir/SpoonacularClient.cpp.obj	b575085cb5a1ff48
+7009	7914	8168521350169934	MealPlanner.exe	2002fe9f176aa1fb
+74	125	8168522067177271	clean	3d57c9d1f31b000a
+89	1053	8168522068984425	CMakeFiles/MealPlanner.dir/Meal.cpp.obj	6e8d372c36243ff2
+172	1535	8168522069818363	CMakeFiles/MealPlanner.dir/Favorites.cpp.obj	b28ce1f3d340e617
+61	1594	8168522068703010	CMakeFiles/MealPlanner.dir/MealPlanner.cpp.obj	ca5d084ca6b10bb8
+194	1661	8168522070028309	CMakeFiles/MealPlanner.dir/GroceryList.cpp.obj	aded7d88478960e1
+142	5054	8168522069518384	CMakeFiles/MealPlanner.dir/AIClient.cpp.obj	10866d3a18f06c04
+116	5676	8168522069248269	CMakeFiles/MealPlanner.dir/SpoonacularClient.cpp.obj	b575085cb5a1ff48
+5676	6388	8168522124849693	MealPlanner.exe	2002fe9f176aa1fb

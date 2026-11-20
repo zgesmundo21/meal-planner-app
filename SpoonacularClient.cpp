@@ -58,11 +58,52 @@ std::vector<Meal> SpoonacularClient::searchMeals(
                 { "apiKey", apiKey }
             });
 
+    // Check for network or connection errors
+    if (response.error)
+    {
+        std::cerr
+            << "Spoonacular network error: "
+            << response.error.message
+            << std::endl;
+
+        return meals;
+    }
+
+    // Check the HTTP response status
     if (response.status_code != 200)
     {
-        std::cout
-            << "Failed to connect to Spoonacular."
+        std::cerr
+            << "\nSpoonacular API Error"
+            << "\nHTTP Status Code: "
+            << response.status_code
+            << "\nResponse: "
+            << response.text
             << std::endl;
+
+        if (response.status_code == 401)
+        {
+            std::cerr
+                << "Authentication failed. Check your API key."
+                << std::endl;
+        }
+        else if (response.status_code == 402)
+        {
+            std::cerr
+                << "Spoonacular quota or payment limit reached."
+                << std::endl;
+        }
+        else if (response.status_code == 429)
+        {
+            std::cerr
+                << "Too many requests. Please try again later."
+                << std::endl;
+        }
+        else if (response.status_code >= 500)
+        {
+            std::cerr
+                << "Spoonacular server error. Please try again later."
+                << std::endl;
+        }
 
         return meals;
     }

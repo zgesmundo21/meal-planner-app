@@ -3,19 +3,44 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <cstdlib>
+#include <string>
 
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
+namespace
+{
+    std::string readGeminiApiKey()
+    {
+        char* value = nullptr;
+
+        if (_dupenv_s(&value, nullptr, "GEMINI_API_KEY") != 0 ||
+            value == nullptr)
+        {
+            return {};
+        }
+
+        std::string key(value);
+        std::free(value);
+        return key;
+    }
+}
+
 std::string AIClient::generateMealPlan(
     const std::string& goal,
     int calories,
     int days)
 {
-    std::string apiKey =
-        "AQ.Ab8RN6JZD8ANLKPViNehDho-K5fwoziPZyY8NG-jSg14x03YmQ";
+    std::string apiKey = readGeminiApiKey();
+
+    if (apiKey.empty())
+	{
+		return
+			"Gemini API key not found. Please set the GEMINI_API_KEY and restart Visual Studios.";
+	}
 
     std::string prompt =
         "Create a "
@@ -53,14 +78,9 @@ std::string AIClient::generateMealPlan(
             cpr::Url{
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent"
             },
-            cpr::Parameters{
-                { "key", apiKey }
-            },
             cpr::Header{
-                {
-                    "Content-Type",
-                    "application/json"
-                }
+                { "Content-Type", "application/json" },
+                { "x-goog-api-key", apiKey }
             },
             cpr::Body{
                 requestBody.dump()
@@ -110,8 +130,12 @@ std::string AIClient::generateMealPlanFromRecipes(
     int calories,
     const std::vector<std::string>& recipes)
 {
-    std::string apiKey =
-        "AQ.Ab8RN6JZD8ANLKPViNehDho-K5fwoziPZyY8NG-jSg14x03YmQ";
+    std::string apiKey = readGeminiApiKey();
+
+    if (apiKey.empty())
+    {
+        return "Gemini API key not found. Set GEMINI_API_KEY and restart Visual Studio.";
+    }
 
     std::string prompt;
 
@@ -201,17 +225,9 @@ std::string AIClient::generateMealPlanFromRecipes(
             cpr::Url{
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent"
             },
-            cpr::Parameters{
-                {
-                    "key",
-                    apiKey
-                }
-            },
             cpr::Header{
-                {
-                    "Content-Type",
-                    "application/json"
-                }
+                { "Content-Type", "application/json" },
+                { "x-goog-api-key", apiKey }
             },
             cpr::Body{
                 requestBody.dump()
@@ -273,8 +289,12 @@ std::string AIClient::generateMealPlanFromRecipes(
 std::string AIClient::askQuestion(
     const std::string& question)
 {
-    std::string apiKey =
-        "AQ.Ab8RN6JZD8ANLKPViNehDho-K5fwoziPZyY8NG-jSg14x03YmQ";
+    std::string apiKey = readGeminiApiKey();
+
+    if (apiKey.empty())
+    {
+        return "Gemini API key not found. Set GEMINI_API_KEY and restart Visual Studio.";
+    }
 
     std::string prompt =
         "Answer this nutrition question in one short paragraph:\n\n";
@@ -315,14 +335,9 @@ std::string AIClient::askQuestion(
             cpr::Url{
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent"
             },
-            cpr::Parameters{
-                { "key", apiKey }
-            },
             cpr::Header{
-                {
-                    "Content-Type",
-                    "application/json"
-                }
+                { "Content-Type", "application/json" },
+                { "x-goog-api-key", apiKey }
             },
             cpr::Body{
                 requestBody.dump()

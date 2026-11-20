@@ -189,10 +189,7 @@ std::string AIClient::generateMealPlanFromRecipes(
         "Breakfast: Recipe Name\n"
         "Lunch: Recipe Name\n"
         "Dinner: Recipe Name\n";
-
-    std::cout << "\nENTERED generateMealPlanFromRecipes()\n";
-
-    std::cout << "\nPROMPT:\n";
+    
     std::cout << prompt << std::endl;
 
     json requestBody =
@@ -234,23 +231,7 @@ std::string AIClient::generateMealPlanFromRecipes(
             });
 
     std::cout << "\nGEMINI REQUEST FINISHED\n";
-
-    std::cout << "\nSTATUS CODE: "
-        << response.status_code
-        << std::endl;
-
-    std::cout << "\nERROR CODE: "
-        << static_cast<int>(response.error.code)
-        << std::endl;
-
-    std::cout << "\nERROR MESSAGE: "
-        << response.error.message
-        << std::endl;
-
-    std::cout << "\nRAW RESPONSE:\n"
-        << response.text
-        << std::endl;
-
+    
     if (response.status_code != 200)
     {
         return "Failed to generate meal plan.";
@@ -300,35 +281,22 @@ std::string AIClient::askQuestion(
         "Answer this nutrition question in one short paragraph:\n\n";
 
     prompt += question;
-
-    std::cout
-        << "\nQUESTION:\n"
-        << prompt
-        << std::endl;
-
+	
     json requestBody =
-    {
-        {
-            "contents",
-            { {
-                {
-                    "parts",
-                    { {
-                        {
-                            "text",
-                            prompt
-                        }
-                    } }
-                }
-            } }
-        }
-    };
-
-    std::cout
-        << "\nREQUEST BODY:\n"
-        << requestBody.dump(4)
-        << std::endl;
-
+	{
+		{
+			"contents",
+			{ {
+				{
+					"parts",
+					{ {
+						{ "text", prompt }
+					} }
+				}
+			} }
+		}
+	};
+        
     auto response =
         cpr::Post(
             cpr::Timeout{ 240000 },
@@ -343,32 +311,12 @@ std::string AIClient::askQuestion(
                 requestBody.dump()
             });
 
-    std::cout
-        << "\nSTATUS CODE: "
-        << response.status_code
-        << std::endl;
-
-    std::cout
-        << "\nERROR CODE: "
-        << static_cast<int>(response.error.code)
-        << std::endl;
-
-    std::cout
-        << "\nERROR MESSAGE: "
-        << response.error.message
-        << std::endl;
-
     if (response.status_code != 200)
     {
-        std::cout
-            << "\nRESPONSE:\n"
-            << response.text
-            << std::endl;
-
-        return
-            "AI assistant unavailable.";
+        std::cerr << "Gemini request failed (HTTP status: "
+                  << response.status_code << ").\n";
+        return "The nutrition assistant is unavailable right now. Please try again.";
     }
-
     try
     {
         json data =

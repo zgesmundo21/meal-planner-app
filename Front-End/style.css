@@ -1,0 +1,147 @@
+
+/* Website colour palette */
+:root {
+    --primary: #245746;
+    --primary-light: #39785F;
+    --background: #F5F7F2;
+    --white: #FFFFFF;
+    --text: #20352D;
+    --muted: #66786E;
+}
+
+/* Reset default browser spacing */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+/* Main application layout */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Left navigation sidebar */
+.sidebar {
+    width: 250px;
+    background: var(--primary);
+    color: white;
+    padding: 30px 20px;
+    flex-shrink: 0;
+}
+
+    .sidebar h1 {
+        margin-bottom: 35px;
+    }
+
+/* Sidebar buttons */
+.nav-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: transparent;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+    .nav-btn:hover,
+    .nav-btn.active {
+        background: var(--primary-light);
+    }
+
+/* Main content area */
+.main-content {
+    flex: 1;
+    padding: 45px;
+    min-width: 0;
+}
+
+    .main-content h2 {
+        font-size: 30px;
+    }
+
+/* Hide inactive pages */
+.page {
+    display: none;
+}
+
+    .page.active {
+        display: block;
+    }
+
+/* Dashboard welcome card */
+.welcome-card {
+    margin-top: 30px;
+    padding: 35px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 550px;
+    margin-top: 25px;
+}
+
+input,
+select {
+    padding: 13px;
+    border: 1px solid #CCD7CF;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+/* Main action buttons */
+form button,
+.welcome-card button {
+    padding: 14px 22px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+    form button:hover,
+    .welcome-card button:hover {
+        background: var(--primary-light);
+    }
+
+/* API results */
+#recipe-results,
+#meal-plan-result {
+    margin-top: 25px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Mobile-friendly layout */
+@media (max-width: 700px) {
+    .app {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .main-content {
+        padding: 24px;
+    }
+}

@@ -82,13 +82,13 @@ build CMakeFiles\MealPlanner.dir\SpoonacularClient.cpp.obj: CXX_COMPILER__MealPl
   TARGET_PDB = MealPlanner.pdb
   TARGET_SUPPORT_DIR = CMakeFiles\MealPlanner.dir
 
-build CMakeFiles\MealPlanner.dir\AIClient.cpp.obj: CXX_COMPILER__MealPlanner_unscanned_Debug C$:\Users\roshn\source\repos\meal-planner-app\AIClient.cpp || cmake_object_order_depends_target_MealPlanner
+build CMakeFiles\MealPlanner.dir\Back-end\AIClient.cpp.obj: CXX_COMPILER__MealPlanner_unscanned_Debug C$:\Users\roshn\source\repos\meal-planner-app\Back-end\AIClient.cpp || cmake_object_order_depends_target_MealPlanner
   CONFIG = Debug
   DEFINES = -DFMT_SHARED
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd /utf-8
   INCLUDES = -external:IC:\Users\roshn\source\repos\meal-planner-app\out\build\x64-debug\vcpkg_installed\x64-windows\include -external:W0
   OBJECT_DIR = CMakeFiles\MealPlanner.dir
-  OBJECT_FILE_DIR = CMakeFiles\MealPlanner.dir
+  OBJECT_FILE_DIR = CMakeFiles\MealPlanner.dir\Back-end
   TARGET_COMPILE_PDB = CMakeFiles\MealPlanner.dir\
   TARGET_PDB = MealPlanner.pdb
   TARGET_SUPPORT_DIR = CMakeFiles\MealPlanner.dir
@@ -123,7 +123,7 @@ build CMakeFiles\MealPlanner.dir\GroceryList.cpp.obj: CXX_COMPILER__MealPlanner_
 #############################################
 # Link the executable MealPlanner.exe
 
-build MealPlanner.exe: CXX_EXECUTABLE_LINKER__MealPlanner_Debug CMakeFiles\MealPlanner.dir\MealPlanner.cpp.obj CMakeFiles\MealPlanner.dir\Meal.cpp.obj CMakeFiles\MealPlanner.dir\SpoonacularClient.cpp.obj CMakeFiles\MealPlanner.dir\AIClient.cpp.obj CMakeFiles\MealPlanner.dir\Favorites.cpp.obj CMakeFiles\MealPlanner.dir\GroceryList.cpp.obj | vcpkg_installed\x64-windows\debug\lib\cpr.lib vcpkg_installed\x64-windows\debug\lib\fmtd.lib vcpkg_installed\x64-windows\debug\lib\libcurl-d.lib
+build MealPlanner.exe: CXX_EXECUTABLE_LINKER__MealPlanner_Debug CMakeFiles\MealPlanner.dir\MealPlanner.cpp.obj CMakeFiles\MealPlanner.dir\Meal.cpp.obj CMakeFiles\MealPlanner.dir\SpoonacularClient.cpp.obj CMakeFiles\MealPlanner.dir\Back-end\AIClient.cpp.obj CMakeFiles\MealPlanner.dir\Favorites.cpp.obj CMakeFiles\MealPlanner.dir\GroceryList.cpp.obj | vcpkg_installed\x64-windows\debug\lib\cpr.lib vcpkg_installed\x64-windows\debug\lib\fmtd.lib vcpkg_installed\x64-windows\debug\lib\libcurl-d.lib
   CONFIG = Debug
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -MDd
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console

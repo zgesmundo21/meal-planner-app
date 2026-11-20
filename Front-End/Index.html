@@ -1,0 +1,158 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MealMate | Your Meal Planning Assistant</title>
+
+    <!-- Connect our CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Sidebar navigation -->
+        <aside class="sidebar">
+            <h1>🥗 MealMate</h1>
+
+            <nav>
+                <button class="nav-btn active" data-page="dashboard">
+                    Dashboard
+                </button>
+
+                <button class="nav-btn" data-page="recipes">
+                    Search Recipes
+                </button>
+
+                <button class="nav-btn" data-page="planner">
+                    AI Meal Planner
+                </button>
+
+                <button class="nav-btn" data-page="favorites">
+                    Favorites
+                </button>
+
+                <button class="nav-btn" data-page="grocery">
+                    Grocery List
+                </button>
+
+                <button class="nav-btn" data-page="nutrition">
+                    Nutrition Assistant
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main website content -->
+        <main class="main-content">
+
+            <!-- Dashboard -->
+            <section id="dashboard" class="page active">
+                <h2>Welcome to MealMate!</h2>
+                <p>Your personal meal planning assistant.</p>
+
+                <div class="welcome-card">
+                    <h3>What should we cook today?</h3>
+                    <p>
+                        Discover recipes and create meal plans
+                        personalized to your goals.
+                    </p>
+
+                    <button id="start-planning">
+                        Generate a Meal Plan
+                    </button>
+                </div>
+            </section>
+
+            <!-- Recipe Search -->
+            <section id="recipes" class="page">
+                <h2>Search Recipes</h2>
+
+                <form id="recipe-form">
+                    <input id="recipe-query"
+                           type="text"
+                           placeholder="Search for chicken, pasta..."
+                           required>
+
+                    <button type="submit">Search</button>
+                </form>
+
+                <div id="recipe-results"></div>
+            </section>
+
+            <!-- AI Meal Planner -->
+            <section id="planner" class="page">
+                <h2>AI Meal Planner</h2>
+
+                <form id="planner-form">
+                    <label for="goal">Your Goal</label>
+
+                    <select id="goal">
+                        <option value="balanced">
+                            Balanced Diet
+                        </option>
+                        <option value="high protein">
+                            High Protein
+                        </option>
+                        <option value="weight loss">
+                            Weight Loss
+                        </option>
+                    </select>
+
+                    <label for="calories">
+                        Daily Calories
+                    </label>
+
+                    <input id="calories"
+                           type="number"
+                           min="1"
+                           value="2000"
+                           required>
+
+                    <label for="days">
+                        Number of Days
+                    </label>
+
+                    <input id="days"
+                           type="number"
+                           min="1"
+                           max="14"
+                           value="3"
+                           required>
+
+                    <button type="submit">
+                        Generate Meal Plan
+                    </button>
+                </form>
+
+                <div id="meal-plan-result"></div>
+            </section>
+
+            <!-- Favorites -->
+            <section id="favorites" class="page">
+                <h2>My Favorites</h2>
+                <p>Your saved recipes will appear here.</p>
+            </section>
+
+            <!-- Grocery List -->
+            <section id="grocery" class="page">
+                <h2>Grocery List</h2>
+                <p>Your grocery items will appear here.</p>
+            </section>
+
+            <!-- Nutrition Assistant -->
+            <section id="nutrition" class="page">
+                <h2>AI Nutrition Assistant</h2>
+                <p>Ask questions about food and nutrition.</p>
+            </section>
+
+        </main>
+    </div>
+
+  
+    <script src="script.js"></script>
+</body>
+</html>

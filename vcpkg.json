@@ -2,6 +2,7 @@
   "dependencies": [
     "fmt",
     "cpr",
-    "nlohmann-json"
+    "nlohmann-json",
+      "cpp-httplib"
   ]
 }

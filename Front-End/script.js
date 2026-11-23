@@ -533,3 +533,48 @@ renderFavorites();
 renderGrocery();
 navigate();
 checkAPI();
+
+
+// ==========================================
+// TOP BAR RECIPE SEARCH
+// ==========================================
+
+const topbarSearchForm =
+    document.getElementById("topbar-search-form");
+
+const topbarSearchInput =
+    document.getElementById("topbar-search-input");
+
+topbarSearchForm?.addEventListener("submit", function (event) {
+     
+    event.preventDefault();
+
+    // Get the user's search text
+    const searchTerm = topbarSearchInput.value.trim();
+
+    if (!searchTerm) {
+        return;
+    }
+
+    // Find the existing recipe search elements
+    const recipeInput =
+        document.getElementById("recipe-query");
+
+    const recipeForm =
+        document.getElementById("search-form");
+
+    if (!recipeInput || !recipeForm) {
+        console.error("Recipe search form not found.");
+        return;
+    }
+
+    // Copy the search into Discover Recipes
+    recipeInput.value = searchTerm;
+
+    // Navigate to the Recipes section
+    window.location.hash = "recipes";
+
+    // Run the existing recipe search handler
+    recipeForm.requestSubmit();
+
+});

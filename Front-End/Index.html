@@ -1,158 +1,347 @@
 ﻿
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>MealMate | Your Meal Planning Assistant</title>
-
-    <!-- Connect our CSS file -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#f5f7ef">
+    <title>MealMate | Fresh ideas for every meal</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-
 <body>
-    <div class="app">
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Main navigation">
+            <a class="brand" href="#home">
+                <span class="brand-icon">✳</span>
+                <span>
+                    meal<span class="brand-light">mate</span>
+                    <small>eat well, feel good</small>
+                </span>
+            </a>
 
-        <!-- Sidebar navigation -->
-        <aside class="sidebar">
-            <h1>🥗 MealMate</h1>
+            <div class="sidebar-label">YOUR KITCHEN</div>
 
-            <nav>
-                <button class="nav-btn active" data-page="dashboard">
-                    Dashboard
-                </button>
-
-                <button class="nav-btn" data-page="recipes">
-                    Search Recipes
-                </button>
-
-                <button class="nav-btn" data-page="planner">
-                    AI Meal Planner
-                </button>
-
-                <button class="nav-btn" data-page="favorites">
-                    Favorites
-                </button>
-
-                <button class="nav-btn" data-page="grocery">
-                    Grocery List
-                </button>
-
-                <button class="nav-btn" data-page="nutrition">
-                    Nutrition Assistant
-                </button>
+            <nav id="navigation" class="navigation" aria-label="Sections">
+                <a href="#home" data-page="home" class="nav-link active">
+                    <span>⌂</span> Home
+                </a>
+                <a href="#recipes" data-page="recipes" class="nav-link">
+                    <span>⌕</span> Discover Recipes
+                </a>
+                <a href="#planner" data-page="planner" class="nav-link">
+                    <span>✧</span> AI Meal Planner
+                </a>
+                <a href="#favorites" data-page="favorites" class="nav-link">
+                    <span>♡</span> My Favorites
+                </a>
+                <a href="#grocery" data-page="grocery" class="nav-link">
+                    <span>▤</span> Grocery List
+                </a>
             </nav>
+
+            <div class="sidebar-note">
+                <span class="note-icon">🌿</span>
+                <strong>A little nourishment, every day.</strong>
+                <p>Make room for meals that make you feel good.</p>
+            </div>
+
+            <p class="sidebar-footer">Made for your everyday table</p>
         </aside>
 
-        <!-- Main website content -->
-        <main class="main-content">
+        <div class="main-column">
+            <header class="topbar">
+                <a href="#home" class="mobile-brand">✳ mealmate</a>
+                <span class="topbar-greeting">
+                    Your fresh start begins here
+                    <span aria-hidden="true">☀</span>
+                </span>
+                <span class="status-chip" id="api-status">● Checking API</span>
+            </header>
 
-            <!-- Dashboard -->
-            <section id="dashboard" class="page active">
-                <h2>Welcome to MealMate!</h2>
-                <p>Your personal meal planning assistant.</p>
+            <main id="main-content">
 
-                <div class="welcome-card">
-                    <h3>What should we cook today?</h3>
-                    <p>
-                        Discover recipes and create meal plans
-                        personalized to your goals.
-                    </p>
+                <!-- SECTION 1: HOME -->
+                <section id="home" class="page active" aria-labelledby="home-title">
+                    <div class="hero">
+                        <div class="hero-copy">
+                            <span class="eyebrow">✳ YOUR KITCHEN COMPANION</span>
+                            <h1 id="home-title">
+                                Good food.<br><em>Good mood.</em>
+                            </h1>
+                            <p>
+                                Less time wondering what to eat. More time enjoying
+                                meals made just for you.
+                            </p>
+                            <a href="#planner" class="button button-light">
+                                Plan my meals <span>↗</span>
+                            </a>
+                        </div>
 
-                    <button id="start-planning">
-                        Generate a Meal Plan
-                    </button>
-                </div>
-            </section>
+                        <div class="hero-art" aria-hidden="true">
+                            <div class="plate">
+                                <span>🥬</span>
+                                <span>🥑</span>
+                                <span>🍅</span>
+                                <span>🥒</span>
+                                <span>🥕</span>
+                            </div>
+                            <div class="hero-sparkle sparkle-one">✦</div>
+                            <div class="hero-sparkle sparkle-two">✧</div>
+                        </div>
+                    </div>
 
-            <!-- Recipe Search -->
-            <section id="recipes" class="page">
-                <h2>Search Recipes</h2>
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow muted">EXPLORE MEALMATE</span>
+                            <h2>What sounds good today?</h2>
+                        </div>
+                        <p>A few good places to start</p>
+                    </div>
 
-                <form id="recipe-form">
-                    <input id="recipe-query"
-                           type="text"
-                           placeholder="Search for chicken, pasta..."
-                           required>
+                    <div class="feature-grid">
+                        <a href="#recipes" class="feature-card">
+                            <span class="feature-icon peach">⌕</span>
+                            <h3>Find something delicious</h3>
+                            <p>Explore recipes for every craving and occasion.</p>
+                            <span class="text-link">Discover recipes →</span>
+                        </a>
 
-                    <button type="submit">Search</button>
-                </form>
+                        <a href="#planner" class="feature-card">
+                            <span class="feature-icon lavender">✧</span>
+                            <h3>Make a plan that fits</h3>
+                            <p>Let AI take the guesswork out of your week.</p>
+                            <span class="text-link">Create a meal plan →</span>
+                        </a>
 
-                <div id="recipe-results"></div>
-            </section>
+                        <a href="#grocery" class="feature-card">
+                            <span class="feature-icon mint">▤</span>
+                            <h3>Shop a little smarter</h3>
+                            <p>Keep everything you need in one simple list.</p>
+                            <span class="text-link">View grocery list →</span>
+                        </a>
+                    </div>
 
-            <!-- AI Meal Planner -->
-            <section id="planner" class="page">
-                <h2>AI Meal Planner</h2>
+                    <div class="home-bottom">
+                        <div class="tip-card">
+                            <span class="eyebrow muted">A LITTLE REMINDER</span>
+                            <h3>Healthy eating is a journey, not a checklist.</h3>
+                            <p>
+                                Start with one nourishing meal today.
+                                The little things add up.
+                            </p>
+                        </div>
 
-                <form id="planner-form">
-                    <label for="goal">Your Goal</label>
+                        <div class="mini-stats">
+                            <span class="eyebrow muted">YOUR KITCHEN AT A GLANCE</span>
+                            <div>
+                                <strong id="home-fav-count">0</strong>
+                                <span>Saved recipes</span>
+                            </div>
+                            <div>
+                                <strong id="home-grocery-count">0</strong>
+                                <span>Grocery items</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                    <select id="goal">
-                        <option value="balanced">
-                            Balanced Diet
-                        </option>
-                        <option value="high protein">
-                            High Protein
-                        </option>
-                        <option value="weight loss">
-                            Weight Loss
-                        </option>
-                    </select>
+                <!-- SECTION 2: RECIPE SEARCH -->
+                <section id="recipes" class="page" aria-labelledby="recipes-title">
+                    <div class="page-intro">
+                        <span class="eyebrow muted">DISCOVER SOMETHING NEW</span>
+                        <h1 id="recipes-title">Find your next favorite.</h1>
+                        <p>
+                            Search for something comforting, nourishing,
+                            or totally new.
+                        </p>
+                    </div>
 
-                    <label for="calories">
-                        Daily Calories
-                    </label>
+                    <form id="search-form" class="search-row">
+                        <label class="sr-only" for="recipe-query">
+                            Search recipes
+                        </label>
+                        <input id="recipe-query"
+                               placeholder="Try chicken, pasta, vegetarian bowls..."
+                               required>
+                        <button class="button button-primary" type="submit">
+                            Search recipes
+                        </button>
+                    </form>
 
-                    <input id="calories"
-                           type="number"
-                           min="1"
-                           value="2000"
-                           required>
+                    <div id="recipe-message" class="message" role="status">
+                        Searches will use your Spoonacular-powered C++ backend
+                        when connected.
+                    </div>
+                    <div id="recipe-results" class="recipe-grid"></div>
+                </section>
 
-                    <label for="days">
-                        Number of Days
-                    </label>
+                <!-- SECTION 3: AI MEAL PLANNER -->
+                <section id="planner" class="page" aria-labelledby="planner-title">
+                    <div class="page-intro">
+                        <span class="eyebrow muted">A PLAN THAT WORKS FOR YOU</span>
+                        <h1 id="planner-title">Your week, thoughtfully planned.</h1>
+                        <p>
+                            Tell MealMate what you're looking for and
+                            let Gemini help with the ideas.
+                        </p>
+                    </div>
 
-                    <input id="days"
-                           type="number"
-                           min="1"
-                           max="14"
-                           value="3"
-                           required>
+                    <div class="planner-grid">
+                        <form id="plan-form" class="panel form-panel">
+                            <h2>Let's make your meal plan</h2>
 
-                    <button type="submit">
-                        Generate Meal Plan
-                    </button>
-                </form>
+                            <label for="goal">What's your goal?</label>
+                            <select id="goal">
+                                <option value="balanced, nutritious meals">
+                                    Balanced eating
+                                </option>
+                                <option value="high protein meals">
+                                    More protein
+                                </option>
+                                <option value="vegetarian meals">
+                                    Vegetarian
+                                </option>
+                                <option value="budget-friendly meals">
+                                    Budget-friendly
+                                </option>
+                                <option value="quick and easy meals">
+                                    Quick & easy
+                                </option>
+                            </select>
 
-                <div id="meal-plan-result"></div>
-            </section>
+                            <label for="calories">Daily calorie target</label>
+                            <input id="calories"
+                                   type="number"
+                                   min="500"
+                                   max="6000"
+                                   value="2000"
+                                   required>
 
-            <!-- Favorites -->
-            <section id="favorites" class="page">
-                <h2>My Favorites</h2>
-                <p>Your saved recipes will appear here.</p>
-            </section>
+                            <label for="days">How many days?</label>
+                            <select id="days">
+                                <option value="3">3 days</option>
+                                <option value="5">5 days</option>
+                                <option value="7" selected>7 days</option>
+                            </select>
 
-            <!-- Grocery List -->
-            <section id="grocery" class="page">
-                <h2>Grocery List</h2>
-                <p>Your grocery items will appear here.</p>
-            </section>
+                            <button class="button button-primary full" type="submit">
+                                ✧ Generate my meal plan
+                            </button>
+                        </form>
 
-            <!-- Nutrition Assistant -->
-            <section id="nutrition" class="page">
-                <h2>AI Nutrition Assistant</h2>
-                <p>Ask questions about food and nutrition.</p>
-            </section>
+                        <div class="panel results-panel">
+                            <span class="eyebrow muted">YOUR PERSONALIZED PLAN</span>
+                            <h2>Made just for you</h2>
+                            <div id="plan-message" class="message" role="status">
+                                Your meal plan will appear here when the backend
+                                is connected.
+                            </div>
+                            <pre id="plan-result" class="plan-result" hidden></pre>
+                        </div>
+                    </div>
 
-        </main>
+                    <div class="panel nutrition-panel">
+                        <div>
+                            <span class="eyebrow muted">ASK A LITTLE MORE</span>
+                            <h2>AI Nutrition Assistant</h2>
+                            <p>
+                                Curious about ingredients or balanced meals?
+                                Ask a question.
+                            </p>
+                        </div>
+
+                        <form id="nutrition-form">
+                            <label class="sr-only" for="nutrition-question">
+                                Nutrition question
+                            </label>
+                            <input id="nutrition-question"
+                                   placeholder="e.g. How can I add more protein to breakfast?"
+                                   required>
+                            <button class="button button-outline" type="submit">
+                                Ask AI →
+                            </button>
+                        </form>
+
+                        <div id="nutrition-message" class="message" role="status"></div>
+                        <pre id="nutrition-result" class="plan-result" hidden></pre>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: FAVORITES -->
+                <section id="favorites" class="page" aria-labelledby="favorites-title">
+                    <div class="page-intro">
+                        <span class="eyebrow muted">THE ONES YOU LOVE</span>
+                        <h1 id="favorites-title">Your saved recipes.</h1>
+                        <p>
+                            Keep your favorite finds close,
+                            ready for another day.
+                        </p>
+                    </div>
+
+                    <div id="favorites-list" class="recipe-grid"></div>
+                </section>
+
+                <!-- SECTION 5: GROCERY LIST -->
+                <section id="grocery" class="page" aria-labelledby="grocery-title">
+                    <div class="page-intro">
+                        <span class="eyebrow muted">EVERYTHING IN ONE PLACE</span>
+                        <h1 id="grocery-title">Your grocery list.</h1>
+                        <p>A simple list to make shopping feel a little easier.</p>
+                    </div>
+
+                    <div class="panel grocery-panel">
+                        <form id="grocery-form" class="search-row">
+                            <label class="sr-only" for="grocery-input">
+                                Add grocery item
+                            </label>
+                            <input id="grocery-input"
+                                   placeholder="Add an ingredient or grocery item..."
+                                   maxlength="100"
+                                   required>
+                            <button class="button button-primary" type="submit">
+                                + Add item
+                            </button>
+                        </form>
+
+                        <div class="list-meta">
+                            <span id="grocery-progress">0 of 0 completed</span>
+                            <button id="clear-completed"
+                                    class="plain-button"
+                                    type="button">
+                                Clear completed
+                            </button>
+                        </div>
+
+                        <ul id="grocery-list" class="grocery-list"></ul>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="footer">
+                © MealMate · Fresh ideas for everyday eating
+                <span>Made with care ♡</span>
+            </footer>
+        </div>
     </div>
 
-  
-    <script src="script.js"></script>
+    <!-- MOBILE NAVIGATION -->
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="#home" data-page="home">⌂<small>Home</small></a>
+        <a href="#recipes" data-page="recipes">⌕<small>Recipes</small></a>
+        <a href="#planner" data-page="planner">✧<small>Planner</small></a>
+        <a href="#favorites" data-page="favorites">♡<small>Saved</small></a>
+        <a href="#grocery" data-page="grocery">▤<small>List</small></a>
+    </nav>
+
+    <!-- RECIPE DETAILS POPUP -->
+    <dialog id="recipe-dialog">
+        <button id="close-dialog"
+                class="dialog-close"
+                aria-label="Close recipe details">
+            ×
+        </button>
+        <div id="recipe-dialog-content"></div>
+    </dialog>
 </body>
 </html>

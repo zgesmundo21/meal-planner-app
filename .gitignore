@@ -1,1 +1,30 @@
 .vs/
+
+# CMake generated build files
+out/
+build/
+CMakeFiles/
+CMakeCache.txt
+
+# vcpkg installed dependencies
+vcpkg_installed/
+
+# Compiled C++ files
+*.exe
+*.obj
+*.pdb
+*.ilk
+
+# Local API keys and environment variables
+.env
+.env.*
+!.env.example
+
+# Local configuration files containing secrets
+secrets.json
+
+.vs*
+
+/h origin main
+
+CppProperties.json

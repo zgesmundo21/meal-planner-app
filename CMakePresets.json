@@ -6,6 +6,10 @@
       "displayName": "x64 Debug (vcpkg)",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/x64-debug",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_MAKE_PROGRAM": "C:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe",

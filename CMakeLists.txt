@@ -14,7 +14,7 @@ add_executable(MealPlanner
     MealPlanner.cpp
     Meal.cpp
     SpoonacularClient.cpp
-    "Back-end/AIClient.cpp"
+    AIClient.cpp
     Favorites.cpp
     GroceryList.cpp
 )

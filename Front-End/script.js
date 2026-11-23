@@ -142,22 +142,38 @@ const message = (selector, text, isError = false) => {
 
 // Send HTTP requests to the C++ backend.
 async function api(path, options = {}) {
-    const response = await fetch(`${API_BASE}${path}`, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        }
-    });
+    let response;
+
+    try {
+        response = await fetch(`${API_BASE}${path}`, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            }
+        });
+    } catch (error) {
+        console.error("Backend connection failed:", {
+            path,
+            error
+        });
+
+        throw new Error(
+            `Could not connect to the MealMate backend at ${API_BASE}. ` +
+            "Check that MealMateServer.exe is running and that " +
+            "the requested endpoint and CORS settings are correct."
+        );
+    }
 
     const text = await response.text();
 
     let data;
+
     try {
         data = text ? JSON.parse(text) : {};
     } catch {
         throw new Error(
-            `Server returned non-JSON data (HTTP ${response.status}).`
+            `Backend returned invalid JSON (HTTP ${response.status}).`
         );
     }
 
@@ -165,7 +181,7 @@ async function api(path, options = {}) {
         throw new Error(
             data.error ||
             data.message ||
-            `Request failed (HTTP ${response.status}).`
+            `Backend request failed (HTTP ${response.status}).`
         );
     }
 
@@ -574,67 +590,135 @@ $("#search-form").addEventListener("submit", async (e) => {
     }
 });
 
-// AI meal planner form.
 $("#plan-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    message("#plan-message", "Generating your meal plan...");
+    const submitButton = $("#plan-form button[type='submit']");
+
+    const goal = $("#goal").value;
+    const calories = Number($("#calories").value);
+    const days = Number($("#days").value);
+
+    if (!goal || !Number.isFinite(calories) ||
+        calories < 500 || calories > 6000 ||
+        ![3, 5, 7].includes(days)) {
+        message(
+            "#plan-message",
+            "Please enter valid meal-planning preferences.",
+            true
+        );
+        return;
+    }
+
+    message("#plan-message", "Gemini is creating your meal plan...");
     $("#plan-result").hidden = true;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "✧ Generating your plan...";
 
     try {
         const data = await api("/api/meal-plan", {
             method: "POST",
             body: JSON.stringify({
-                goal: $("#goal").value,
-                calories: Number($("#calories").value),
-                days: Number($("#days").value)
+                goal: goal,
+                calories: calories,
+                days: days
             })
         });
 
-        if (typeof data.plan !== "string") {
-            throw new Error("Expected a plan string from the backend.");
+        if (typeof data.plan !== "string" ||
+            !data.plan.trim()) {
+            throw new Error(
+                "The backend did not return a valid meal plan."
+            );
         }
 
         $("#plan-result").textContent = data.plan;
         $("#plan-result").hidden = false;
-        message("#plan-message", "Here's your personalized plan!");
-    } catch (err) {
+
         message(
             "#plan-message",
-            `Meal planner unavailable: ${err.message}`,
+            "Your personalized meal plan is ready!"
+        );
+
+    } catch (error) {
+        console.error("Gemini meal planner error:", error);
+
+        message(
+            "#plan-message",
+            `Meal planner unavailable: ${error.message}`,
             true
         );
+
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "✧ Generate my meal plan";
     }
 });
 
-// AI nutrition assistant form.
 $("#nutrition-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    message("#nutrition-message", "Thinking about your question...");
+    const question = $("#nutrition-question").value.trim();
+
+    const submitButton = $(
+        "#nutrition-form button[type='submit']"
+    );
+
+    if (!question) {
+        message(
+            "#nutrition-message",
+            "Please enter a nutrition question.",
+            true
+        );
+        return;
+    }
+
+    message(
+        "#nutrition-message",
+        "Gemini is preparing your answer..."
+    );
+
     $("#nutrition-result").hidden = true;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Thinking...";
 
     try {
         const data = await api("/api/nutrition", {
             method: "POST",
             body: JSON.stringify({
-                question: $("#nutrition-question").value.trim()
+                question: question
             })
         });
 
-        if (typeof data.answer !== "string") {
-            throw new Error("Expected an answer string from the backend.");
+        if (typeof data.answer !== "string" ||
+            !data.answer.trim()) {
+            throw new Error(
+                "The backend did not return a valid answer."
+            );
         }
 
         $("#nutrition-result").textContent = data.answer;
         $("#nutrition-result").hidden = false;
-        message("#nutrition-message", "Here's what I found:");
-    } catch (err) {
+
         message(
             "#nutrition-message",
-            `Nutrition assistant unavailable: ${err.message}`,
+            "Here's Gemini's response:"
+        );
+
+    } catch (error) {
+        console.error("Gemini nutrition error:", error);
+
+        message(
+            "#nutrition-message",
+            `Nutrition assistant unavailable: ${error.message}`,
             true
         );
+
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Ask AI →";
     }
 });
 

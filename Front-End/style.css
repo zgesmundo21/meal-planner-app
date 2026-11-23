@@ -1,11 +1,13 @@
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
 
 :root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-display: 'Manrope', sans-serif;
     --forest: #234c3b;
     --deep: #193e30;
     --sage: #e7eee3;
-    --cream: #fafaf6;
+    --cream: #f7f5ef;
     --white: #fff;
     --text: #24392f;
     --muted: #78887d;
@@ -19,33 +21,54 @@
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
 
+
 body {
+    min-width: 320px;
     margin: 0;
     background: var(--cream);
     color: var(--text);
-    font: 15px/1.55 'DM Sans',sans-serif;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
 }
 
-button, input, select {
+
+button,
+input,
+select,
+textarea {
     font: inherit;
 }
 
-button, a {
+
+button,
+a {
+    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 }
+
 
 a {
     color: inherit;
     text-decoration: none;
 }
 
-button {
-    cursor: pointer;
-}
+    
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+        outline: 3px solid rgba(83, 124, 96, 0.3);
+        outline-offset: 2px;
+    }
+
 
 .app-shell {
     display: flex;
@@ -91,10 +114,10 @@ button {
     }
 
 .brand-name {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-display);
     font-size: 25px;
-    font-weight: 700;
-    letter-spacing: -1px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
     line-height: 1;
     color: #193E30;
 }
@@ -158,7 +181,7 @@ button {
 }
 
 .sidebar-note strong {
-    font: 600 18px/1.25 'Playfair Display',serif;
+    font: 700 18px/1.25 var(--font-display);
     display: block;
 }
 
@@ -281,9 +304,13 @@ main {
         color: #8aab8b;
     }
 
-.hero h1, .page-intro h1 {
-    font: 600 clamp(42px,4.8vw,65px)/1.06 'Playfair Display',serif;
-    letter-spacing: -1.7px;
+.hero h1,
+.page-intro h1 {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 4.8vw, 65px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
     margin: 17px 0;
 }
 
@@ -392,9 +419,10 @@ main {
     margin: 43px 0 18px;
 }
 
-    .section-heading h2, .panel h2 {
-        font: 600 27px/1.2 'Playfair Display',serif;
-        letter-spacing: -.4px;
+    .section-heading h2,
+    .panel h2 {
+        font: 700 27px/1.2 var(--font-display);
+        letter-spacing: -0.8px;
         margin: 7px 0 0;
     }
 
@@ -452,7 +480,7 @@ main {
 }
 
 .feature-card h3 {
-    font: 600 19px/1.25 'Playfair Display',serif;
+    font: 700 19px/1.25 var(--font-display);
     margin: 17px 0 7px;
 }
 
@@ -482,7 +510,7 @@ main {
 }
 
     .tip-card h3 {
-        font: 600 23px/1.25 'Playfair Display',serif;
+        font: 700 23px/1.25 var(--font-display);
         margin: 12px 0 8px;
         max-width: 350px;
     }
@@ -504,11 +532,11 @@ main {
         margin-top: 15px;
     }
 
-    .mini-stats strong {
-        font: 600 29px 'Playfair Display',serif;
-        color: #356348;
-        min-width: 30px;
-    }
+.mini-stats strong {
+    font: 800 29px var(--font-display);
+    color: #356348;
+    min-width: 30px;
+}
 
     .mini-stats div span {
         font-size: 12px;
@@ -599,7 +627,7 @@ main {
 }
 
 .recipe-card h3 {
-    font: 600 20px/1.3 'Playfair Display',serif;
+    font: 700 20px/1.3 var(--font-display);
     margin: 0 0 14px;
 }
 
@@ -747,7 +775,7 @@ main {
 
     .empty-state strong {
         display: block;
-        font: 600 23px 'Playfair Display',serif;
+        font: 700 23px var(--font-display);
         color: #375744;
         margin: 10px;
     }
@@ -792,7 +820,7 @@ dialog {
 }
 
 dialog h2 {
-    font: 600 29px 'Playfair Display',serif;
+    font: 700 29px var(--font-display);
     color: var(--forest);
 }
 
@@ -810,11 +838,6 @@ dialog img {
 
 dialog ul {
     padding-left: 22px;
-}
-
-button:focus-visible, a:focus-visible {
-    outline: 3px solid #9abf8f;
-    outline-offset: 3px;
 }
 
 /* Medium desktop and tablet */
@@ -917,6 +940,14 @@ button:focus-visible, a:focus-visible {
     .hero {
         padding: 29px;
         min-height: 300px;
+    }
+       
+    @media (max-width: 480px) {
+        .font-display,
+        .hero h1,
+        .page-intro h1 {
+            text-wrap: balance;
+        }
     }
 
     .hero-copy {

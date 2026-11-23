@@ -29,6 +29,7 @@ target_link_libraries(MealPlanner PRIVATE
 add_executable(MealMateServer
     Server.cpp
     SpoonacularClient.cpp
+    AIClient.cpp
     Meal.cpp
 )
 

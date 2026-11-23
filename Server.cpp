@@ -7,6 +7,7 @@
 #include <nlohmann/json.hpp>
 
 #include "SpoonacularClient.h"
+#include "AIClient.h"
 
 using json = nlohmann::json;
 
@@ -34,7 +35,7 @@ int main()
 
             res.set_header(
                 "Access-Control-Allow-Methods",
-                "GET, OPTIONS"
+                "GET, POST, OPTIONS"
             );
 
             res.set_header(
@@ -176,6 +177,179 @@ int main()
                 res.set_content(
                     nlohmann::json{
                         { "error", "Unable to retrieve recipe details." }
+                    }.dump(),
+                    "application/json"
+                );
+            }
+        }
+    );
+    
+    server.Post("/api/meal-plan",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            try
+            {
+                json input = json::parse(req.body);
+
+                if (!input.is_object() ||
+                    !input.contains("goal") ||
+                    !input["goal"].is_string() ||
+                    !input.contains("calories") ||
+                    !input["calories"].is_number_integer() ||
+                    !input.contains("days") ||
+                    !input["days"].is_number_integer())
+                {
+                    res.status = 400;
+                    res.set_content(
+                        json{ { "error", "Invalid meal plan input." } }.dump(),
+                        "application/json"
+                    );
+                    return;
+                }
+
+                std::string goal =
+                    input["goal"].get<std::string>();
+
+                int calories = input["calories"].get<int>();
+                int days = input["days"].get<int>();
+
+                if (goal.empty() || goal.size() > 200 ||
+                    calories < 500 || calories > 6000 ||
+                    (days != 3 && days != 5 && days != 7))
+                {
+                    res.status = 400;
+                    res.set_content(
+                        json{ { "error", "Invalid meal planning values." } }.dump(),
+                        "application/json"
+                    );
+                    return;
+                }
+
+                AIClient ai;
+
+                std::cout
+                    << "Generating Gemini meal plan..."
+                    << std::endl;
+
+                std::string plan =
+                    ai.generateMealPlan(goal, calories, days);
+
+                res.set_content(
+                    json{ { "plan", plan } }.dump(),
+                    "application/json"
+                );
+            }
+            catch (const json::exception&)
+            {
+                res.status = 400;
+                res.set_content(
+                    json{ { "error", "Invalid JSON request." } }.dump(),
+                    "application/json"
+                );
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr
+                    << "Meal planner error: "
+                    << e.what()
+                    << std::endl;
+
+                res.status = 502;
+                res.set_content(
+                    json{ { "error", "Meal plan generation failed." } }.dump(),
+                    "application/json"
+                );
+            }
+        }
+    );
+
+    server.Post("/api/nutrition",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            try
+            {
+                // Read the JSON sent from the frontend.
+                json input = json::parse(req.body);
+
+                // Make sure the request contains a question.
+                if (!input.is_object() ||
+                    !input.contains("question") ||
+                    !input["question"].is_string())
+                {
+                    res.status = 400;
+
+                    res.set_content(
+                        json{
+                            { "error", "A nutrition question is required." }
+                        }.dump(),
+                        "application/json"
+                    );
+
+                    return;
+                }
+
+                std::string question =
+                    input["question"].get<std::string>();
+
+                // Prevent empty or excessively long questions.
+                if (question.empty() || question.size() > 2000)
+                {
+                    res.status = 400;
+
+                    res.set_content(
+                        json{
+                            { "error", "Question must be 1-2000 characters." }
+                        }.dump(),
+                        "application/json"
+                    );
+
+                    return;
+                }
+
+                // Create an instance of your existing Gemini client.
+                AIClient ai;
+
+                std::cout
+                    << "Processing Gemini nutrition question..."
+                    << std::endl;
+
+                // Call your existing AIClient.cpp function.
+                std::string answer =
+                    ai.askQuestion(question);
+
+                // Send the response back to JavaScript.
+                res.set_content(
+                    json{
+                        { "answer", answer }
+                    }.dump(),
+                    "application/json"
+                );
+            }
+            catch (const json::exception&)
+            {
+                res.status = 400;
+
+                res.set_content(
+                    json{
+                        { "error", "Invalid JSON request." }
+                    }.dump(),
+                    "application/json"
+                );
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr
+                    << "Nutrition assistant error: "
+                    << e.what()
+                    << std::endl;
+
+                res.status = 502;
+
+                res.set_content(
+                    json{
+                        { "error", "Nutrition assistant failed." }
                     }.dump(),
                     "application/json"
                 );

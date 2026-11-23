@@ -1,22 +1,33 @@
 ﻿
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#f5f7ef">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <meta name="theme-color" content="#f7f5ef">
+
     <title>MealMate | Fresh ideas for every meal</title>
+
+    <!-- Website stylesheet -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Website JavaScript -->
     <script src="script.js" defer></script>
 </head>
+
 <body>
+
     <div class="app-shell">
+                
         <aside class="sidebar" aria-label="Main navigation">
 
             <!-- MealMate Logo -->
             <a href="#home" class="brand">
 
-                <!-- Green rounded-square leaf icon -->
                 <span class="brand-icon">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
@@ -28,53 +39,94 @@
                          stroke-linecap="round"
                          stroke-linejoin="round"
                          aria-hidden="true">
-                        <path d="M20 4c-8 0-14 3-14 11a5 5 0 0 0 5 5c8 0 11-6 9-16Z" />
-                        <path d="M4 21c2-6 6-10 12-13" />
+
+                        <path d="M20 4c-8 0-14 3-14 11a5 5 0 0 0 5 5c8 0 11-6 9-16Z"></path>
+                        <path d="M4 21c2-6 6-10 12-13"></path>
+
                     </svg>
                 </span>
 
-                <!-- Brand name -->
                 <span class="brand-name">MealMate</span>
 
             </a>
 
-
-            <div class="sidebar-label">YOUR KITCHEN</div>
-
-            <nav id="navigation" class="navigation" aria-label="Sections">
-                <a href="#home" data-page="home" class="nav-link active">
-                    <span>⌂</span> Home
-                </a>
-                <a href="#recipes" data-page="recipes" class="nav-link">
-                    <span>⌕</span> Discover Recipes
-                </a>
-                <a href="#planner" data-page="planner" class="nav-link">
-                    <span>✧</span> AI Meal Planner
-                </a>
-                <a href="#favorites" data-page="favorites" class="nav-link">
-                    <span>♡</span> My Favorites
-                </a>
-                <a href="#grocery" data-page="grocery" class="nav-link">
-                    <span>▤</span> Grocery List
-                </a>
-            </nav>
-
-            <div class="sidebar-note">
-                <span class="note-icon">🌿</span>
-                <strong>A little nourishment, every day.</strong>
-                <p>Make room for meals that make you feel good.</p>
+            <!-- Sidebar Heading -->
+            <div class="sidebar-label">
+                YOUR KITCHEN
             </div>
 
-            <p class="sidebar-footer">Made for your everyday table</p>
+            <!-- Desktop Navigation -->
+            <nav id="navigation"
+                 class="navigation"
+                 aria-label="Sections">
+
+                <a href="#home"
+                   data-page="home"
+                   class="nav-link active">
+                    <span>⌂</span>
+                    Home
+                </a>
+
+                <a href="#recipes"
+                   data-page="recipes"
+                   class="nav-link">
+                    <span>⌕</span>
+                    Discover Recipes
+                </a>
+
+                <a href="#planner"
+                   data-page="planner"
+                   class="nav-link">
+                    <span>✧</span>
+                    AI Meal Planner
+                </a>
+
+                <a href="#favorites"
+                   data-page="favorites"
+                   class="nav-link">
+                    <span>♡</span>
+                    My Favorites
+                </a>
+
+                <a href="#grocery"
+                   data-page="grocery"
+                   class="nav-link">
+                    <span>▤</span>
+                    Grocery List
+                </a>
+
+            </nav>
+
+            <!-- Sidebar Wellness Message -->
+            <div class="sidebar-note">
+
+                <span class="note-icon">🌿</span>
+
+                <strong>
+                    A little nourishment, every day.
+                </strong>
+
+                <p>
+                    Make room for meals that make you feel good.
+                </p>
+
+            </div>
+
+            <p class="sidebar-footer">
+                Made for your everyday table
+            </p>
+
         </aside>
 
         <div class="main-column">
+
             <header class="topbar">
 
                 <!-- Mobile MealMate Logo -->
                 <a href="#home" class="mobile-brand brand">
 
                     <span class="brand-icon">
+
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="24"
                              height="24"
@@ -85,26 +137,28 @@
                              stroke-linecap="round"
                              stroke-linejoin="round"
                              aria-hidden="true">
-                            <path d="M20 4c-8 0-14 3-14 11a5 5 0 0 0 5 5c8 0 11-6 9-16Z" />
-                            <path d="M4 21c2-6 6-10 12-13" />
+
+                            <path d="M20 4c-8 0-14 3-14 11a5 5 0 0 0 5 5c8 0 11-6 9-16Z"></path>
+                            <path d="M4 21c2-6 6-10 12-13"></path>
+
                         </svg>
+
                     </span>
 
                     <span class="brand-name">MealMate</span>
 
                 </a>
 
-
-                <!-- TOP BAR RECIPE SEARCH -->
                 <form id="topbar-search-form"
                       class="topbar-search"
                       role="search">
 
-                    <label class="sr-only" for="topbar-search-input">
+                    <label class="sr-only"
+                           for="topbar-search-input">
                         Search recipes or ingredients
                     </label>
 
-                    <!-- Magnifying glass -->
+                    <!-- Magnifying Glass Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="18"
                          height="18"
@@ -115,16 +169,21 @@
                          stroke-linecap="round"
                          stroke-linejoin="round"
                          aria-hidden="true">
+
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
+
                     </svg>
 
+                    <!-- Search Input -->
                     <input id="topbar-search-input"
                            type="search"
                            placeholder="Search recipes or ingredients"
                            autocomplete="off"
+                           maxlength="200"
                            required>
 
+                    <!-- Search Button -->
                     <button type="submit"
                             class="topbar-search-button"
                             aria-label="Search recipes">
@@ -133,29 +192,56 @@
 
                 </form>
 
-                <span class="status-chip" id="api-status">● Checking API</span>
+
+                <!-- Backend API Connection Status -->
+                <span class="status-chip" id="api-status">
+                    ● Checking API
+                </span>
+
             </header>
 
             <main id="main-content">
 
-                <!-- SECTION 1: HOME -->
-                <section id="home" class="page active" aria-labelledby="home-title">
+
+                <!-- ==============================
+                     SECTION 1: HOME
+                     ============================== -->
+
+                <section id="home"
+                         class="page active"
+                         aria-labelledby="home-title">
+
+                    <!-- Homepage Hero Banner -->
                     <div class="hero">
+
                         <div class="hero-copy">
-                            <span class="eyebrow">✳ YOUR KITCHEN COMPANION</span>
+
+                            <span class="eyebrow">
+                                ✳ YOUR KITCHEN COMPANION
+                            </span>
+
                             <h1 id="home-title">
-                                Fresh meals.<br><em>Made simple.</em>
+                                Fresh meals.
+                                <br>
+                                <em>Made simple.</em>
                             </h1>
+
                             <p>
-                                Less time wondering what to eat. More time enjoying
-                                meals made just for you.
+                                Less time wondering what to eat.
+                                More time enjoying meals made just for you.
                             </p>
-                            <a href="#planner" class="button button-light">
-                                Plan my meals <span>↗</span>
+
+                            <a href="#planner"
+                               class="button button-light">
+                                Plan my meals
+                                <span>↗</span>
                             </a>
+
                         </div>
 
+                        <!-- Decorative Food Illustration -->
                         <div class="hero-art" aria-hidden="true">
+
                             <div class="plate">
                                 <span>🥬</span>
                                 <span>🥑</span>
@@ -163,131 +249,308 @@
                                 <span>🥒</span>
                                 <span>🥕</span>
                             </div>
-                            <div class="hero-sparkle sparkle-one">✦</div>
-                            <div class="hero-sparkle sparkle-two">✧</div>
+
+                            <div class="hero-sparkle sparkle-one">
+                                ✦
+                            </div>
+
+                            <div class="hero-sparkle sparkle-two">
+                                ✧
+                            </div>
+
                         </div>
+
                     </div>
 
+
+                    <!-- Homepage Section Heading -->
                     <div class="section-heading">
+
                         <div>
-                            <span class="eyebrow muted">EXPLORE MEALMATE</span>
-                            <h2>What sounds good today?</h2>
+                            <span class="eyebrow muted">
+                                EXPLORE MEALMATE
+                            </span>
+
+                            <h2>
+                                What sounds good today?
+                            </h2>
                         </div>
-                        <p>A few good places to start</p>
+
+                        <p>
+                            A few good places to start
+                        </p>
+
                     </div>
 
+
+                    <!-- Homepage Feature Cards -->
                     <div class="feature-grid">
+
+                        <!-- Discover Recipes -->
                         <a href="#recipes" class="feature-card">
-                            <span class="feature-icon peach">⌕</span>
-                            <h3>Find something delicious</h3>
-                            <p>Explore recipes for every craving and occasion.</p>
-                            <span class="text-link">Discover recipes →</span>
+
+                            <span class="feature-icon peach">
+                                ⌕
+                            </span>
+
+                            <h3>
+                                Find something delicious
+                            </h3>
+
+                            <p>
+                                Explore recipes for every craving
+                                and occasion.
+                            </p>
+
+                            <span class="text-link">
+                                Discover recipes →
+                            </span>
+
                         </a>
 
+
+                        <!-- AI Meal Planner -->
                         <a href="#planner" class="feature-card">
-                            <span class="feature-icon lavender">✧</span>
-                            <h3>Make a plan that fits</h3>
-                            <p>Let AI take the guesswork out of your week.</p>
-                            <span class="text-link">Create a meal plan →</span>
+
+                            <span class="feature-icon lavender">
+                                ✧
+                            </span>
+
+                            <h3>
+                                Make a plan that fits
+                            </h3>
+
+                            <p>
+                                Let AI take the guesswork
+                                out of your week.
+                            </p>
+
+                            <span class="text-link">
+                                Create a meal plan →
+                            </span>
+
                         </a>
 
+
+                        <!-- Grocery List -->
                         <a href="#grocery" class="feature-card">
-                            <span class="feature-icon mint">▤</span>
-                            <h3>Shop a little smarter</h3>
-                            <p>Keep everything you need in one simple list.</p>
-                            <span class="text-link">View grocery list →</span>
+
+                            <span class="feature-icon mint">
+                                ▤
+                            </span>
+
+                            <h3>
+                                Shop a little smarter
+                            </h3>
+
+                            <p>
+                                Keep everything you need
+                                in one simple list.
+                            </p>
+
+                            <span class="text-link">
+                                View grocery list →
+                            </span>
+
                         </a>
+
                     </div>
 
+
+                    <!-- Homepage Bottom Cards -->
                     <div class="home-bottom">
+
+                        <!-- Wellness Reminder -->
                         <div class="tip-card">
-                            <span class="eyebrow muted">A LITTLE REMINDER</span>
-                            <h3>Healthy eating is a journey, not a checklist.</h3>
+
+                            <span class="eyebrow muted">
+                                A LITTLE REMINDER
+                            </span>
+
+                            <h3>
+                                Healthy eating is a journey,
+                                not a checklist.
+                            </h3>
+
                             <p>
                                 Start with one nourishing meal today.
                                 The little things add up.
                             </p>
+
                         </div>
 
+
+                        <!-- Kitchen Statistics -->
                         <div class="mini-stats">
-                            <span class="eyebrow muted">YOUR KITCHEN AT A GLANCE</span>
+
+                            <span class="eyebrow muted">
+                                YOUR KITCHEN AT A GLANCE
+                            </span>
+
                             <div>
-                                <strong id="home-fav-count">0</strong>
-                                <span>Saved recipes</span>
+                                <strong id="home-fav-count">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Saved recipes
+                                </span>
                             </div>
+
                             <div>
-                                <strong id="home-grocery-count">0</strong>
-                                <span>Grocery items</span>
+                                <strong id="home-grocery-count">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Grocery items
+                                </span>
                             </div>
+
                         </div>
+
                     </div>
+
                 </section>
 
-                <!-- SECTION 2: RECIPE SEARCH -->
-                <section id="recipes" class="page" aria-labelledby="recipes-title">
+                <!-- ==============================
+                     SECTION 2: DISCOVER RECIPES
+                     ============================== -->
+
+                <section id="recipes"
+                         class="page"
+                         aria-labelledby="recipes-title">
+
                     <div class="page-intro">
-                        <span class="eyebrow muted">DISCOVER SOMETHING NEW</span>
-                        <h1 id="recipes-title">Find your next favorite.</h1>
+
+                        <span class="eyebrow muted">
+                            DISCOVER SOMETHING NEW
+                        </span>
+
+                        <h1 id="recipes-title">
+                            Find your next favorite.
+                        </h1>
+
                         <p>
-                            Search for something comforting, nourishing,
-                            or totally new.
+                            Search for something comforting,
+                            nourishing, or totally new.
                         </p>
+
                     </div>
 
-                    <form id="search-form" class="search-row">
-                        <label class="sr-only" for="recipe-query">
+                    <!-- Spoonacular Recipe Search Form -->
+                    <form id="search-form"
+                          class="search-row"
+                          role="search">
+
+                        <label class="sr-only"
+                               for="recipe-query">
                             Search recipes
                         </label>
+
                         <input id="recipe-query"
+                               type="search"
                                placeholder="Try chicken, pasta, vegetarian bowls..."
+                               maxlength="200"
                                required>
-                        <button class="button button-primary" type="submit">
+
+                        <button class="button button-primary"
+                                type="submit">
                             Search recipes
                         </button>
+
                     </form>
 
-                    <div id="recipe-message" class="message" role="status">
-                        Searches will use your Spoonacular-powered C++ backend
-                        when connected.
+                    <!-- Search Status Messages -->
+                    <div id="recipe-message"
+                         class="message"
+                         role="status"
+                         aria-live="polite">
+
+                        Search for recipes using
+                        your Spoonacular-powered backend.
+
                     </div>
-                    <div id="recipe-results" class="recipe-grid"></div>
+
+
+                    <!-- Recipe Cards Appear Here -->
+                    <div id="recipe-results"
+                         class="recipe-grid">
+                    </div>
+
                 </section>
 
-                <!-- SECTION 3: AI MEAL PLANNER -->
-                <section id="planner" class="page" aria-labelledby="planner-title">
+                <!-- ==============================
+                     SECTION 3: AI MEAL PLANNER
+                     ============================== -->
+
+                <section id="planner"
+                         class="page"
+                         aria-labelledby="planner-title">
+
                     <div class="page-intro">
-                        <span class="eyebrow muted">A PLAN THAT WORKS FOR YOU</span>
-                        <h1 id="planner-title">Your week, thoughtfully planned.</h1>
+
+                        <span class="eyebrow muted">
+                            A PLAN THAT WORKS FOR YOU
+                        </span>
+
+                        <h1 id="planner-title">
+                            Your week, thoughtfully planned.
+                        </h1>
+
                         <p>
-                            Tell MealMate what you're looking for and
-                            let Gemini help with the ideas.
+                            Tell MealMate what you're looking for
+                            and let Gemini help with the ideas.
                         </p>
+
                     </div>
 
                     <div class="planner-grid">
-                        <form id="plan-form" class="panel form-panel">
-                            <h2>Let's make your meal plan</h2>
 
-                            <label for="goal">What's your goal?</label>
+                        <!-- Meal Planner Form -->
+                        <form id="plan-form"
+                              class="panel form-panel">
+
+                            <h2>
+                                Let's make your meal plan
+                            </h2>
+
+
+                            <!-- Meal Goal -->
+                            <label for="goal">
+                                What's your goal?
+                            </label>
+
                             <select id="goal">
+
                                 <option value="balanced, nutritious meals">
                                     Balanced eating
                                 </option>
+
                                 <option value="high protein meals">
                                     More protein
                                 </option>
+
                                 <option value="vegetarian meals">
                                     Vegetarian
                                 </option>
+
                                 <option value="budget-friendly meals">
                                     Budget-friendly
                                 </option>
+
                                 <option value="quick and easy meals">
                                     Quick & easy
                                 </option>
+
                             </select>
 
-                            <label for="calories">Daily calorie target</label>
+
+                            <!-- Calorie Target -->
+                            <label for="calories">
+                                Daily calorie target
+                            </label>
+
                             <input id="calories"
                                    type="number"
                                    min="500"
@@ -295,130 +558,309 @@
                                    value="2000"
                                    required>
 
-                            <label for="days">How many days?</label>
+
+                            <!-- Number of Days -->
+                            <label for="days">
+                                How many days?
+                            </label>
+
                             <select id="days">
-                                <option value="3">3 days</option>
-                                <option value="5">5 days</option>
-                                <option value="7" selected>7 days</option>
+
+                                <option value="3">
+                                    3 days
+                                </option>
+
+                                <option value="5">
+                                    5 days
+                                </option>
+
+                                <option value="7" selected>
+                                    7 days
+                                </option>
+
                             </select>
 
-                            <button class="button button-primary full" type="submit">
+
+                            <!-- Generate Meal Plan -->
+                            <button class="button button-primary full"
+                                    type="submit">
+
                                 ✧ Generate my meal plan
+
                             </button>
+
                         </form>
 
+                        <!-- AI Meal Plan Results -->
                         <div class="panel results-panel">
-                            <span class="eyebrow muted">YOUR PERSONALIZED PLAN</span>
-                            <h2>Made just for you</h2>
-                            <div id="plan-message" class="message" role="status">
-                                Your meal plan will appear here when the backend
-                                is connected.
+
+                            <span class="eyebrow muted">
+                                YOUR PERSONALIZED PLAN
+                            </span>
+
+                            <h2>
+                                Made just for you
+                            </h2>
+
+                            <div id="plan-message"
+                                 class="message"
+                                 role="status"
+                                 aria-live="polite">
+
+                                Your meal plan will appear here
+                                when the backend is connected.
+
                             </div>
-                            <pre id="plan-result" class="plan-result" hidden></pre>
+
+                            <pre id="plan-result"
+                                 class="plan-result"
+                                 hidden></pre>
+
                         </div>
+
                     </div>
 
+                    <!-- AI Nutrition Assistant -->
                     <div class="panel nutrition-panel">
+
                         <div>
-                            <span class="eyebrow muted">ASK A LITTLE MORE</span>
-                            <h2>AI Nutrition Assistant</h2>
+
+                            <span class="eyebrow muted">
+                                ASK A LITTLE MORE
+                            </span>
+
+                            <h2>
+                                AI Nutrition Assistant
+                            </h2>
+
                             <p>
-                                Curious about ingredients or balanced meals?
-                                Ask a question.
+                                Curious about ingredients or
+                                balanced meals? Ask a question.
                             </p>
+
                         </div>
 
+                        <!-- Nutrition Question Form -->
                         <form id="nutrition-form">
-                            <label class="sr-only" for="nutrition-question">
+
+                            <label class="sr-only"
+                                   for="nutrition-question">
                                 Nutrition question
                             </label>
+
                             <input id="nutrition-question"
+                                   type="text"
                                    placeholder="e.g. How can I add more protein to breakfast?"
                                    required>
-                            <button class="button button-outline" type="submit">
+
+                            <button class="button button-outline"
+                                    type="submit">
                                 Ask AI →
                             </button>
+
                         </form>
 
-                        <div id="nutrition-message" class="message" role="status"></div>
-                        <pre id="nutrition-result" class="plan-result" hidden></pre>
+                        <!-- Nutrition Status -->
+                        <div id="nutrition-message"
+                             class="message"
+                             role="status"
+                             aria-live="polite">
+                        </div>
+
+
+                        <!-- Nutrition Response -->
+                        <pre id="nutrition-result"
+                             class="plan-result"
+                             hidden></pre>
+
                     </div>
+
                 </section>
 
-                <!-- SECTION 4: FAVORITES -->
-                <section id="favorites" class="page" aria-labelledby="favorites-title">
+                <!-- ==============================
+                     SECTION 4: FAVORITES
+                     ============================== -->
+
+                <section id="favorites"
+                         class="page"
+                         aria-labelledby="favorites-title">
+
                     <div class="page-intro">
-                        <span class="eyebrow muted">THE ONES YOU LOVE</span>
-                        <h1 id="favorites-title">Your saved recipes.</h1>
+
+                        <span class="eyebrow muted">
+                            THE ONES YOU LOVE
+                        </span>
+
+                        <h1 id="favorites-title">
+                            Your saved recipes.
+                        </h1>
+
                         <p>
                             Keep your favorite finds close,
                             ready for another day.
                         </p>
+
                     </div>
 
-                    <div id="favorites-list" class="recipe-grid"></div>
+                    <!-- Saved Recipe Cards -->
+                    <div id="favorites-list"
+                         class="recipe-grid">
+                    </div>
+
                 </section>
 
-                <!-- SECTION 5: GROCERY LIST -->
-                <section id="grocery" class="page" aria-labelledby="grocery-title">
+                <!-- ==============================
+                     SECTION 5: GROCERY LIST
+                     ============================== -->
+
+                <section id="grocery"
+                         class="page"
+                         aria-labelledby="grocery-title">
+
                     <div class="page-intro">
-                        <span class="eyebrow muted">EVERYTHING IN ONE PLACE</span>
-                        <h1 id="grocery-title">Your grocery list.</h1>
-                        <p>A simple list to make shopping feel a little easier.</p>
+
+                        <span class="eyebrow muted">
+                            EVERYTHING IN ONE PLACE
+                        </span>
+
+                        <h1 id="grocery-title">
+                            Your grocery list.
+                        </h1>
+
+                        <p>
+                            A simple list to make shopping
+                            feel a little easier.
+                        </p>
+
                     </div>
 
+
                     <div class="panel grocery-panel">
-                        <form id="grocery-form" class="search-row">
-                            <label class="sr-only" for="grocery-input">
+
+                        <!-- Add Grocery Item Form -->
+                        <form id="grocery-form"
+                              class="search-row">
+
+                            <label class="sr-only"
+                                   for="grocery-input">
                                 Add grocery item
                             </label>
+
                             <input id="grocery-input"
+                                   type="text"
                                    placeholder="Add an ingredient or grocery item..."
                                    maxlength="100"
                                    required>
-                            <button class="button button-primary" type="submit">
+
+                            <button class="button button-primary"
+                                    type="submit">
                                 + Add item
                             </button>
+
                         </form>
 
+
+                        <!-- Grocery Progress -->
                         <div class="list-meta">
-                            <span id="grocery-progress">0 of 0 completed</span>
+
+                            <span id="grocery-progress">
+                                0 of 0 completed
+                            </span>
+
                             <button id="clear-completed"
                                     class="plain-button"
                                     type="button">
+
                                 Clear completed
+
                             </button>
+
                         </div>
 
-                        <ul id="grocery-list" class="grocery-list"></ul>
+
+                        <!-- Grocery List Items -->
+                        <ul id="grocery-list"
+                            class="grocery-list">
+                        </ul>
+
                     </div>
+
                 </section>
+
             </main>
 
+
+            <!-- ==================================
+                 FOOTER
+                 ================================== -->
+
             <footer class="footer">
+
                 © MealMate · Fresh ideas for everyday eating
-                <span>Made with care ♡</span>
+
+                <span>
+                    Made with care ♡
+                </span>
+
             </footer>
+
         </div>
+
     </div>
 
-    <!-- MOBILE NAVIGATION -->
-    <nav class="mobile-nav" aria-label="Mobile navigation">
-        <a href="#home" data-page="home">⌂<small>Home</small></a>
-        <a href="#recipes" data-page="recipes">⌕<small>Recipes</small></a>
-        <a href="#planner" data-page="planner">✧<small>Planner</small></a>
-        <a href="#favorites" data-page="favorites">♡<small>Saved</small></a>
-        <a href="#grocery" data-page="grocery">▤<small>List</small></a>
+    <!-- ==========================================
+         MOBILE BOTTOM NAVIGATION
+         ========================================== -->
+
+    <nav class="mobile-nav"
+         aria-label="Mobile navigation">
+
+        <a href="#home" data-page="home">
+            ⌂
+            <small>Home</small>
+        </a>
+
+        <a href="#recipes" data-page="recipes">
+            ⌕
+            <small>Recipes</small>
+        </a>
+
+        <a href="#planner" data-page="planner">
+            ✧
+            <small>Planner</small>
+        </a>
+
+        <a href="#favorites" data-page="favorites">
+            ♡
+            <small>Saved</small>
+        </a>
+
+        <a href="#grocery" data-page="grocery">
+            ▤
+            <small>List</small>
+        </a>
+
     </nav>
 
-    <!-- RECIPE DETAILS POPUP -->
+    <!-- ==========================================
+         RECIPE DETAILS POPUP
+         ========================================== -->
+
     <dialog id="recipe-dialog">
+
+        <!-- Close Button -->
         <button id="close-dialog"
                 class="dialog-close"
+                type="button"
                 aria-label="Close recipe details">
             ×
         </button>
-        <div id="recipe-dialog-content"></div>
+
+        <!-- Recipe Information -->
+        <div id="recipe-dialog-content">
+        </div>
+
     </dialog>
+
 </body>
 </html>

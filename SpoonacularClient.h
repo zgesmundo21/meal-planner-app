@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Meal.h"
+#include <nlohmann/json.hpp>
 
 class SpoonacularClient
 {
@@ -22,4 +23,8 @@ public:
 
     void displayRecipeDetails(
         int recipeId);
+    
+    static nlohmann::json searchRecipesJson(
+        const std::string& query
+    );
 };

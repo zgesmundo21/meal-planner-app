@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <regex>
+#include <stdexcept>
 #include <cstdlib>
 #include <string>
 
@@ -556,4 +557,106 @@ std::vector<std::string> SpoonacularClient::getEquipment(
     }
 
     return equipmentList;
+}
+
+// ==========================================
+// WEBSITE RECIPE SEARCH
+// ==========================================
+
+nlohmann::json SpoonacularClient::searchRecipesJson(
+    const std::string& query)
+{
+    // Read the API key from Windows environment variables.
+    // This uses MSVC's secure environment-variable function.
+    char* keyBuffer = nullptr;
+    size_t keyLength = 0;
+
+    if (_dupenv_s(
+        &keyBuffer,
+        &keyLength,
+        "SPOONACULAR_API_KEY") != 0)
+    {
+        throw std::runtime_error(
+            "Unable to read Spoonacular API key."
+        );
+    }
+
+    if (keyBuffer == nullptr || keyLength <= 1)
+    {
+        std::free(keyBuffer);
+
+        throw std::runtime_error(
+            "SPOONACULAR_API_KEY is not configured."
+        );
+    }
+
+    std::string apiKey(keyBuffer);
+    std::free(keyBuffer);
+
+    // Send the search request to Spoonacular.
+    auto response = cpr::Get(
+        cpr::Url{
+            "https://api.spoonacular.com/recipes/complexSearch"
+        },
+        cpr::Parameters{
+            { "query", query },
+            { "number", "10" }
+        },
+        cpr::Header{
+            { "x-api-key", apiKey }
+        },
+        cpr::Timeout{ 15000 }
+    );
+
+    // Handle network errors.
+    if (response.error)
+    {
+        throw std::runtime_error(
+            "Could not connect to Spoonacular: " +
+            response.error.message
+        );
+    }
+
+    // Handle API errors.
+    if (response.status_code != 200)
+    {
+        throw std::runtime_error(
+            "Spoonacular returned HTTP " +
+            std::to_string(response.status_code)
+        );
+    }
+
+    // Parse the response.
+    json data = json::parse(response.text);
+
+    if (!data.contains("results") ||
+        !data["results"].is_array())
+    {
+        throw std::runtime_error(
+            "Unexpected Spoonacular response format."
+        );
+    }
+
+    // Build the JSON structure expected by the frontend.
+    json recipes = json::array();
+
+    for (const auto& recipe : data["results"])
+    {
+        if (!recipe.is_object() ||
+            !recipe.contains("id") ||
+            !recipe["id"].is_number_integer())
+        {
+            continue;
+        }
+
+        recipes.push_back({
+            { "id", recipe["id"] },
+            { "title", recipe.value("title", "") },
+            { "image", recipe.value("image", "") }
+            });
+    }
+
+    return {
+        { "recipes", recipes }
+    };
 }

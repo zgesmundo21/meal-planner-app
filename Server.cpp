@@ -136,6 +136,52 @@ int main()
             }
         }
     );
+
+    // Example request: GET /api/recipes/123456
+
+    server.Get(R"(/api/recipes/(\d+))",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            try
+            {
+                // Extract the recipe ID from the URL.
+                int recipeId =
+                    std::stoi(req.matches[1].str());
+
+                // Retrieve recipe information from Spoonacular.
+                nlohmann::json recipe =
+                    SpoonacularClient::getRecipeDetailsJson(recipeId);
+
+                // Send the recipe data to the frontend.
+                res.set_content(
+                    recipe.dump(),
+                    "application/json"
+                );
+
+                std::cout
+                    << "Recipe details retrieved: "
+                    << recipeId
+                    << std::endl;
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr
+                    << "Recipe details error: "
+                    << e.what()
+                    << std::endl;
+
+                res.status = 502;
+
+                res.set_content(
+                    nlohmann::json{
+                        { "error", "Unable to retrieve recipe details." }
+                    }.dump(),
+                    "application/json"
+                );
+            }
+        }
+    );
       
     std::cout
         << "MealMate backend starting..."

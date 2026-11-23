@@ -660,3 +660,70 @@ nlohmann::json SpoonacularClient::searchRecipesJson(
         { "recipes", recipes }
     };
 }
+
+nlohmann::json SpoonacularClient::getRecipeDetailsJson(int recipeId)
+{
+    if (recipeId <= 0)
+    {
+        throw std::invalid_argument("Invalid recipe ID.");
+    }
+
+    // Read the Spoonacular key securely.
+    char* keyBuffer = nullptr;
+    size_t keyLength = 0;
+
+    if (_dupenv_s(
+        &keyBuffer,
+        &keyLength,
+        "SPOONACULAR_API_KEY") != 0)
+    {
+        throw std::runtime_error("Could not read Spoonacular API key.");
+    }
+
+    if (keyBuffer == nullptr || keyLength <= 1)
+    {
+        std::free(keyBuffer);
+        throw std::runtime_error("SPOONACULAR_API_KEY is missing.");
+    }
+
+    std::string apiKey(keyBuffer);
+    std::free(keyBuffer);
+
+    // Retrieve the selected recipe from Spoonacular.
+    auto response = cpr::Get(
+        cpr::Url{
+            "https://api.spoonacular.com/recipes/" +
+            std::to_string(recipeId) +
+            "/information"
+        },
+        cpr::Parameters{
+            { "includeNutrition", "false" }
+        },
+        cpr::Header{
+            { "x-api-key", apiKey }
+        },
+        cpr::Timeout{ 15000 }
+    );
+
+    if (response.error)
+    {
+        throw std::runtime_error(
+            "Spoonacular connection error: " +
+            response.error.message
+        );
+    }
+
+    if (response.status_code != 200)
+    {
+        throw std::runtime_error(
+            "Spoonacular returned HTTP " +
+            std::to_string(response.status_code)
+        );
+    }
+
+    nlohmann::json data =
+        nlohmann::json::parse(response.text);
+
+    // Return the Spoonacular recipe information.
+    return data;
+}

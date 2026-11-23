@@ -47,6 +47,92 @@ const escapeHTML = (value) =>
         "'": "&#39;"
     }[c]));
 
+
+// ==========================================
+// RECIPE DETAILS HELPERS
+// ==========================================
+
+// Convert Spoonacular HTML instructions into
+// readable, individual cooking steps.
+function getRecipeSteps(recipe) {
+    const groups = Array.isArray(recipe.analyzedInstructions)
+        ? recipe.analyzedInstructions
+        : [];
+
+    const structuredSteps = groups.flatMap(group =>
+        Array.isArray(group.steps) ? group.steps : []
+    );
+
+    if (structuredSteps.length > 0) {
+        return structuredSteps
+            .map(item => String(item.step || "").trim())
+            .filter(Boolean);
+    }
+
+    // Fallback: Spoonacular sometimes returns HTML
+    // such as <ol><li>Step 1</li></ol>.
+    const doc = new DOMParser().parseFromString(
+        String(recipe.instructions || ""),
+        "text/html"
+    );
+
+    const listItems = [...doc.querySelectorAll("li")];
+
+    if (listItems.length > 0) {
+        return listItems
+            .map(item => item.textContent.trim())
+            .filter(Boolean);
+    }
+
+    const text = doc.body.textContent.trim();
+
+    return text ? [text] : [];
+}
+
+// Extract equipment from Spoonacular's
+// analyzed instructions when available.
+function getRecipeEquipment(recipe) {
+    const equipment = new Set();
+
+    for (const group of recipe.analyzedInstructions ?? []) {
+        for (const step of group.steps ?? []) {
+            for (const item of step.equipment ?? []) {
+                if (item.name) {
+                    equipment.add(item.name);
+                }
+            }
+        }
+    }
+
+    return [...equipment];
+}
+function getRecipeIngredients(recipe) {
+    const source = Array.isArray(recipe.extendedIngredients)
+        ? recipe.extendedIngredients
+        : Array.isArray(recipe.ingredients)
+            ? recipe.ingredients
+            : [];
+
+    return source
+        .map(item => {
+            if (typeof item === "string") {
+                return {
+                    display: item,
+                    name: item
+                };
+            }
+
+            return {
+                display: String(
+                    item.original || item.originalString ||
+                    item.name || ""
+                ),
+                name: String(item.name || item.original || "")
+            };
+        })
+        .filter(item => item.display.trim());
+}
+
 // Display informational and error messages.
 const message = (selector, text, isError = false) => {
     const node = $(selector);
@@ -217,7 +303,6 @@ function renderFavorites() {
     favorites.forEach(r => root.append(recipeCard(r, true)));
 }
 
-// Fetch and display full recipe details.
 async function showRecipe(id) {
     const dialog = $("#recipe-dialog");
     const content = $("#recipe-dialog-content");
@@ -226,95 +311,157 @@ async function showRecipe(id) {
     dialog.showModal();
 
     try {
-        // Expected GET /api/recipes/:id
-        const r = await api(
+        // Retrieve the full recipe from our C++ backend.
+        const recipe = await api(
             `/api/recipes/${encodeURIComponent(id)}`
         );
 
-        content.replaceChildren();
+        const ingredients = getRecipeIngredients(recipe);
+        const equipment = getRecipeEquipment(recipe);
+        const steps = getRecipeSteps(recipe);
 
-        const h = document.createElement("h2");
-        h.textContent = r.title || "Recipe details";
-        content.append(h);
+        // Only allow HTTPS images from Spoonacular.
+        const image = typeof recipe.image === "string" &&
+            /^https:\/\/(?:[\w-]+\.)*spoonacular\.com\//i
+                .test(recipe.image)
+            ? recipe.image
+            : "";
 
-        const meta = document.createElement("p");
-        meta.textContent = [
-            r.servings ? `${r.servings} servings` : null,
-            r.readyInMinutes ? `${r.readyInMinutes} minutes` : null
-        ].filter(Boolean).join(" · ");
-        content.append(meta);
+        // Build the recipe details layout.
+        content.innerHTML = `
+            <article class="recipe-detail">
 
-        if (r.nutrition) {
-            const n = document.createElement("p");
-            n.textContent =
-                `Per serving: ${r.nutrition.calories ?? "—"} kcal · ` +
-                `${r.nutrition.protein ?? "—"} g protein · ` +
-                `${r.nutrition.carbs ?? "—"} g carbs · ` +
-                `${r.nutrition.fat ?? "—"} g fat`;
-            content.append(n);
-        }
+                ${image ? `
+                    <img class="recipe-detail-image"
+                         src="${escapeHTML(image)}"
+                         alt="${escapeHTML(recipe.title || "Recipe")}">
+                ` : ""}
 
-        if (Array.isArray(r.ingredients)) {
-            const h3 = document.createElement("h3");
-            h3.textContent = "Ingredients";
-            content.append(h3);
+                <div class="recipe-detail-content">
 
-            const ul = document.createElement("ul");
+                    <span class="eyebrow muted">
+                        MEALMATE RECIPE
+                    </span>
 
-            r.ingredients.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = typeof item === "string"
-                    ? item
-                    : String(item.name || "");
-                ul.append(li);
-            });
+                    <h2>
+                        ${escapeHTML(recipe.title || "Recipe details")}
+                    </h2>
 
-            content.append(ul);
+                    <div class="recipe-detail-meta">
+                        <span>
+                            ◷ ${Number(recipe.readyInMinutes) || "—"} minutes
+                        </span>
 
-            const add = document.createElement("button");
-            add.className = "button button-outline";
-            add.textContent = "+ Add ingredients to grocery list";
+                        <span>
+                            ♧ ${Number(recipe.servings) || "—"} servings
+                        </span>
+                    </div>
 
-            add.addEventListener("click", () => {
-                r.ingredients.forEach(item => {
-                    const name = typeof item === "string"
-                        ? item
-                        : String(item.name || "");
+                    <!-- INGREDIENTS -->
+                    <section class="recipe-detail-section">
 
-                    if (
-                        name.trim() &&
-                        !grocery.some(
-                            g => g.name.toLowerCase() === name.toLowerCase()
-                        )
-                    ) {
-                        grocery.push({
-                            id: crypto.randomUUID(),
-                            name,
-                            done: false
-                        });
-                    }
-                });
+                        <h3>Ingredients</h3>
 
-                save();
-                renderGrocery();
-                add.textContent = "✓ Added to grocery list";
-            });
+                        ${ingredients.length ? `
+                            <ul class="recipe-ingredient-list">
+                                ${ingredients.map(item => `
+                                    <li>
+                                        <label>
+                                            <input type="checkbox">
+                                            <span>
+                                                ${escapeHTML(item.display)}
+                                            </span>
+                                        </label>
+                                    </li>
+                                `).join("")}
+                            </ul>
 
-            content.append(add);
-        }
+                            <button id="add-recipe-ingredients"
+                                    class="button button-outline"
+                                    type="button">
+                                + Add ingredients to grocery list
+                            </button>
+                        ` : `
+                            <p>Ingredients are not available.</p>
+                        `}
 
-        if (r.instructions) {
-            const h3 = document.createElement("h3");
-            h3.textContent = "Instructions";
-            content.append(h3);
+                    </section>
 
-            const instructions = document.createElement("p");
-            instructions.textContent = String(r.instructions);
-            content.append(instructions);
-        }
-    } catch (e) {
+                    <!-- EQUIPMENT -->
+                    <section class="recipe-detail-section">
+
+                        <h3>Equipment</h3>
+
+                        ${equipment.length ? `
+                            <div class="recipe-equipment-list">
+                                ${equipment.map(item => `
+                                    <span>${escapeHTML(item)}</span>
+                                `).join("")}
+                            </div>
+                        ` : `
+                            <p>
+                                Equipment information is not available
+                                for this recipe.
+                            </p>
+                        `}
+
+                    </section>
+
+                    <!-- INSTRUCTIONS -->
+                    <section class="recipe-detail-section">
+
+                        <h3>Step-by-step instructions</h3>
+
+                        ${steps.length ? `
+                            <ol class="recipe-steps">
+                                ${steps.map(step => `
+                                    <li>${escapeHTML(step)}</li>
+                                `).join("")}
+                            </ol>
+                        ` : `
+                            <p>Instructions are not available.</p>
+                        `}
+
+                    </section>
+
+                </div>
+            </article>
+        `;
+
+        // Preserve your existing grocery-list functionality.
+        const addButton = content.querySelector(
+            "#add-recipe-ingredients"
+        );
+
+        addButton?.addEventListener("click", () => {
+            for (const item of ingredients) {
+                const name = item.name.trim();
+
+                if (!name) continue;
+
+                const alreadyAdded = grocery.some(
+                    g => g.name.toLowerCase() === name.toLowerCase()
+                );
+
+                if (!alreadyAdded) {
+                    grocery.push({
+                        id: crypto.randomUUID(),
+                        name,
+                        done: false
+                    });
+                }
+            }
+
+            save();
+            renderGrocery();
+
+            addButton.textContent = "✓ Added to grocery list";
+            addButton.disabled = true;
+        });
+
+    } catch (error) {
         content.textContent =
-            `Couldn't load recipe details: ${e.message}`;
+            `Couldn't load recipe details: ${error.message}`;
     }
 }
 
@@ -533,11 +680,6 @@ renderFavorites();
 renderGrocery();
 navigate();
 checkAPI();
-
-
-// ==========================================
-// TOP BAR RECIPE SEARCH
-// ==========================================
 
 const topbarSearchForm =
     document.getElementById("topbar-search-form");

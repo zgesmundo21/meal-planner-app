@@ -27,4 +27,6 @@ public:
     static nlohmann::json searchRecipesJson(
         const std::string& query
     );
+
+    static nlohmann::json getRecipeDetailsJson(int recipeId);
 };

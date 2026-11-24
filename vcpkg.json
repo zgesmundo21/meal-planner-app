@@ -3,6 +3,6 @@
     "fmt",
     "cpr",
     "nlohmann-json",
-      "cpp-httplib"
+    "cpp-httplib"
   ]
 }

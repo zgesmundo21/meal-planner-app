@@ -1,0 +1,15 @@
+.git
+.vs
+.vscode
+out
+build
+vcpkg_installed
+Debug
+Release
+x64
+*.exe
+*.obj
+*.pdb
+*.user
+.env
+.env.*

@@ -5,7 +5,10 @@
 // API requests go through the C++ backend.
 
 // Change this URL if C++ server uses a different port.
-const API_BASE = "http://localhost:8080";
+const API_BASE =
+    window.location.port === "5500"
+        ? "http://localhost:8080"
+        : window.location.origin;
 
 const STORE = {
     favorites: "mealmate-favorites-v1",

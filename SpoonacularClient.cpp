@@ -15,22 +15,15 @@ namespace
 {
     std::string readSpoonacularApiKey()
     {
-        char* value = nullptr;
+        const char* value =
+            std::getenv("SPOONACULAR_API_KEY");
 
-        if (_dupenv_s(
-            &value,
-            nullptr,
-            "SPOONACULAR_API_KEY") != 0
-            || value == nullptr)
+        if (value == nullptr || value[0] == '\0')
         {
             return {};
         }
 
-        std::string key(value);
-
-        std::free(value);
-
-        return key;
+        return std::string(value);
     }
 }
 
@@ -566,34 +559,15 @@ std::vector<std::string> SpoonacularClient::getEquipment(
 nlohmann::json SpoonacularClient::searchRecipesJson(
     const std::string& query)
 {
-    // Read the API key from Windows environment variables.
-    // This uses MSVC's secure environment-variable function.
-    char* keyBuffer = nullptr;
-    size_t keyLength = 0;
+    std::string apiKey = readSpoonacularApiKey();
 
-    if (_dupenv_s(
-        &keyBuffer,
-        &keyLength,
-        "SPOONACULAR_API_KEY") != 0)
+    if (apiKey.empty())
     {
-        throw std::runtime_error(
-            "Unable to read Spoonacular API key."
-        );
-    }
-
-    if (keyBuffer == nullptr || keyLength <= 1)
-    {
-        std::free(keyBuffer);
-
         throw std::runtime_error(
             "SPOONACULAR_API_KEY is not configured."
         );
     }
 
-    std::string apiKey(keyBuffer);
-    std::free(keyBuffer);
-
-    // Send the search request to Spoonacular.
     auto response = cpr::Get(
         cpr::Url{
             "https://api.spoonacular.com/recipes/complexSearch"
@@ -608,7 +582,6 @@ nlohmann::json SpoonacularClient::searchRecipesJson(
         cpr::Timeout{ 15000 }
     );
 
-    // Handle network errors.
     if (response.error)
     {
         throw std::runtime_error(
@@ -668,28 +641,15 @@ nlohmann::json SpoonacularClient::getRecipeDetailsJson(int recipeId)
         throw std::invalid_argument("Invalid recipe ID.");
     }
 
-    // Read the Spoonacular key securely.
-    char* keyBuffer = nullptr;
-    size_t keyLength = 0;
+    std::string apiKey = readSpoonacularApiKey();
 
-    if (_dupenv_s(
-        &keyBuffer,
-        &keyLength,
-        "SPOONACULAR_API_KEY") != 0)
+    if (apiKey.empty())
     {
-        throw std::runtime_error("Could not read Spoonacular API key.");
+        throw std::runtime_error(
+            "SPOONACULAR_API_KEY is missing."
+        );
     }
 
-    if (keyBuffer == nullptr || keyLength <= 1)
-    {
-        std::free(keyBuffer);
-        throw std::runtime_error("SPOONACULAR_API_KEY is missing.");
-    }
-
-    std::string apiKey(keyBuffer);
-    std::free(keyBuffer);
-
-    // Retrieve the selected recipe from Spoonacular.
     auto response = cpr::Get(
         cpr::Url{
             "https://api.spoonacular.com/recipes/" +

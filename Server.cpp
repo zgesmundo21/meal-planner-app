@@ -3,6 +3,8 @@
 #include <exception>
 #include <string>
 #include <stdexcept>
+#include <cstdlib>
+#include <filesystem>
 
 #include <httplib.h>
 #include <nlohmann/json.hpp>
@@ -12,9 +14,74 @@
 
 using json = nlohmann::json;
 
+namespace fs = std::filesystem;
+
+std::string locateFrontendFolder()
+{
+    fs::path current = fs::current_path();
+
+    for (int level = 0; level < 6; ++level)
+    {
+        fs::path frontend = current / "Front-End";
+
+        if (fs::is_directory(frontend) &&
+            fs::is_regular_file(frontend / "Index.html"))
+        {
+            return frontend.string();
+        }
+
+        if (current == current.parent_path())
+        {
+            break;
+        }
+
+        current = current.parent_path();
+    }
+
+    return "";
+}
+
 int main()
 {
     httplib::Server server;
+
+    std::string frontendFolder = locateFrontendFolder();
+
+    if (frontendFolder.empty())
+    {
+        std::cerr
+            << "Unable to locate frontend folder."
+            << std::endl;
+
+        std::cerr
+            << "Current working directory: "
+            << fs::current_path()
+            << std::endl;
+
+        return 1;
+    }
+
+    std::cout
+        << "Frontend folder located: "
+        << frontendFolder
+        << std::endl;
+
+    if (!server.set_mount_point("/", frontendFolder))
+    {
+        std::cerr
+            << "Unable to mount frontend folder."
+            << std::endl;
+
+        return 1;
+    }
+
+    server.Get("/",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            res.set_redirect("/Index.html");
+        }
+    );
 
     server.set_pre_routing_handler(
         [](const httplib::Request& req,
@@ -493,22 +560,36 @@ int main()
         }
     );
       
+    const char* portEnv = std::getenv("PORT");
+
+    int port = portEnv
+        ? std::stoi(portEnv)
+        : 8080;
+
+    std::string host = portEnv
+        ? "0.0.0.0"
+        : "127.0.0.1";
+
     std::cout
         << "MealMate backend starting..."
         << std::endl;
 
     std::cout
-        << "API address: http://localhost:8080"
+        << "Server address: http://"
+        << host
+        << ":"
+        << port
         << std::endl;
 
     std::cout
         << "Press Ctrl+C to stop the server."
         << std::endl;
 
-    if (!server.listen("127.0.0.1", 8080))
+    if (!server.listen(host, port))
     {
         std::cerr
-            << "Unable to start server on port 8080."
+            << "Unable to start server on port "
+            << port
             << std::endl;
 
         return 1;

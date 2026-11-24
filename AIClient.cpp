@@ -17,17 +17,12 @@ namespace
 {
     std::string readGeminiApiKey()
     {
-        char* value = nullptr;
+        const char* value =
+            std::getenv("GEMINI_API_KEY");
 
-        if (_dupenv_s(&value, nullptr, "GEMINI_API_KEY") != 0 ||
-            value == nullptr)
-        {
-            return {};
-        }
-
-        std::string key(value);
-        std::free(value);
-        return key;
+        return value
+            ? std::string(value)
+            : std::string();
     }
 }
 
@@ -40,8 +35,12 @@ std::string AIClient::generateMealPlan(
 
     if (apiKey.empty())
     {
+        std::cerr
+            << "GEMINI_API_KEY is not configured."
+            << std::endl;
+
         throw std::runtime_error(
-            "Gemini API key not found. Set GEMINI_API_KEY and restart Visual Studio."
+            "The AI meal planner is currently unavailable."
         );
     }
 
@@ -131,6 +130,25 @@ std::string AIClient::generateMealPlan(
                 requestBody.dump()
             });
 
+    if (response.error.code != cpr::ErrorCode::OK)
+    {
+        std::cerr
+            << "Gemini connection error: "
+            << response.error.message
+            << std::endl;
+
+        throw std::runtime_error(
+            "Unable to connect to the AI meal planner."
+        );
+    }
+
+    if (response.status_code == 429)
+    {
+        throw std::runtime_error(
+            "AI request limit reached. Please try again later."
+        );
+    }
+
     if (response.status_code == 503)
     {
         throw std::runtime_error(
@@ -141,13 +159,8 @@ std::string AIClient::generateMealPlan(
     if (response.status_code != 200)
     {
         std::cerr
-            << "\nGEMINI STATUS CODE: "
+            << "Gemini meal planner HTTP status: "
             << response.status_code
-            << std::endl;
-
-        std::cerr
-            << "\nGEMINI RESPONSE:\n"
-            << response.text
             << std::endl;
 
         throw std::runtime_error(
@@ -292,11 +305,6 @@ std::string AIClient::generateMealPlan(
             position += 8;
         }
 
-        std::cout
-            << "\nCOMPLETE MEAL PLAN:\n"
-            << completePlan
-            << std::endl;
-
         return completePlan;
     }
     catch (const std::exception& e)
@@ -316,10 +324,14 @@ std::string AIClient::generateMealPlanFromRecipes(
     const std::vector<std::string>& recipes)
 {
     std::string apiKey = readGeminiApiKey();
-
+   
     if (apiKey.empty())
     {
-        return "Gemini API key not found. Set GEMINI_API_KEY and restart Visual Studio.";
+        std::cerr
+            << "GEMINI_API_KEY is not configured."
+            << std::endl;
+
+        return "The AI meal planner is currently unavailable.";
     }
 
     std::string prompt;
@@ -375,8 +387,6 @@ std::string AIClient::generateMealPlanFromRecipes(
         "Lunch: Recipe Name\n"
         "Dinner: Recipe Name\n";
     
-    std::cout << prompt << std::endl;
-
     json requestBody =
     {
         {
@@ -456,12 +466,15 @@ std::string AIClient::askQuestion(
     const std::string& question)
 {
     std::string apiKey = readGeminiApiKey();
-
+    
     if (apiKey.empty())
     {
+        std::cerr
+            << "GEMINI_API_KEY is not configured."
+            << std::endl;
+
         throw std::runtime_error(
-            "Gemini API key not found. "
-            "Set GEMINI_API_KEY and restart Visual Studio."
+            "Ask Mate is currently unavailable."
         );
     }
 
@@ -512,7 +525,7 @@ std::string AIClient::askQuestion(
         
     auto response =
         cpr::Post(
-            cpr::Timeout{ 240000 },
+            cpr::Timeout{ 120000 },
             cpr::Url{
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent"
             },
@@ -524,17 +537,45 @@ std::string AIClient::askQuestion(
                 requestBody.dump()
             });
 
+    if (response.error.code != cpr::ErrorCode::OK)
+    {
+        std::cerr
+            << "Ask Mate connection error: "
+            << response.error.message
+            << std::endl;
+
+        throw std::runtime_error(
+            "Unable to connect to Ask Mate. Please try again."
+        );
+    }
+
+    if (response.status_code == 429)
+    {
+        throw std::runtime_error(
+            "Ask Mate has reached its request limit. "
+            "Please try again later."
+        );
+    }
+
+    if (response.status_code == 503)
+    {
+        throw std::runtime_error(
+            "Ask Mate is currently busy. Please try again shortly."
+        );
+    }
+
     if (response.status_code != 200)
     {
         std::cerr
-            << "Gemini chatbot request failed. HTTP status: "
+            << "Gemini chatbot HTTP status: "
             << response.status_code
             << std::endl;
 
         throw std::runtime_error(
-            "The nutrition assistant is unavailable right now."
+            "Ask Mate is currently unavailable."
         );
     }
+
     try
     {
         json data = json::parse(response.text);
@@ -619,8 +660,12 @@ std::string AIClient::adaptRecipe(
 
     if (apiKey.empty())
     {
+        std::cerr
+            << "GEMINI_API_KEY is not configured."
+            << std::endl;
+
         throw std::runtime_error(
-            "Gemini API key not found."
+            "AI recipe customization is currently unavailable."
         );
     }
 
@@ -906,6 +951,11 @@ std::string AIClient::adaptRecipe(
                 << "Recipe response is missing section: "
                 << section
                 << std::endl;
+
+            throw std::runtime_error(
+                "Mate could not generate a complete recipe "
+                "adaptation. Please try again."
+            );
         }
     }
 

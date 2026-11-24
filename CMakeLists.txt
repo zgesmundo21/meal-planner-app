@@ -31,10 +31,13 @@ add_executable(MealMateServer
     SpoonacularClient.cpp
     AIClient.cpp
     Meal.cpp
+    GroceryList.cpp
+    Favorites.cpp
 )
 
 target_link_libraries(MealMateServer PRIVATE
     httplib::httplib
+    fmt::fmt
     cpr::cpr
     nlohmann_json::nlohmann_json
 )

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <exception>
 #include <string>
+#include <stdexcept>
 
 #include <httplib.h>
 #include <nlohmann/json.hpp>
@@ -138,23 +139,18 @@ int main()
         }
     );
 
-    // Example request: GET /api/recipes/123456
-
     server.Get(R"(/api/recipes/(\d+))",
         [](const httplib::Request& req,
             httplib::Response& res)
         {
             try
-            {
-                // Extract the recipe ID from the URL.
+            {                
                 int recipeId =
                     std::stoi(req.matches[1].str());
 
-                // Retrieve recipe information from Spoonacular.
                 nlohmann::json recipe =
                     SpoonacularClient::getRecipeDetailsJson(recipeId);
 
-                // Send the recipe data to the frontend.
                 res.set_content(
                     recipe.dump(),
                     "application/json"
@@ -270,10 +266,8 @@ int main()
         {
             try
             {
-                // Read the JSON sent from the frontend.
                 json input = json::parse(req.body);
 
-                // Make sure the request contains a question.
                 if (!input.is_object() ||
                     !input.contains("question") ||
                     !input["question"].is_string())
@@ -293,7 +287,6 @@ int main()
                 std::string question =
                     input["question"].get<std::string>();
 
-                // Prevent empty or excessively long questions.
                 if (question.empty() || question.size() > 2000)
                 {
                     res.status = 400;
@@ -308,18 +301,15 @@ int main()
                     return;
                 }
 
-                // Create an instance of your existing Gemini client.
                 AIClient ai;
 
                 std::cout
                     << "Processing Gemini nutrition question..."
                     << std::endl;
 
-                // Call your existing AIClient.cpp function.
                 std::string answer =
                     ai.askQuestion(question);
 
-                // Send the response back to JavaScript.
                 res.set_content(
                     json{
                         { "answer", answer }
@@ -350,6 +340,152 @@ int main()
                 res.set_content(
                     json{
                         { "error", "Nutrition assistant failed." }
+                    }.dump(),
+                    "application/json"
+                );
+            }
+        }
+    );
+
+    server.Post("/api/adapt-recipe",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            json input = json::parse(
+                req.body,
+                nullptr,
+                false
+            );
+
+            if (!input.is_object() ||
+                !input.contains("recipeId") ||
+                !input["recipeId"].is_number_integer() ||
+                !input.contains("restrictions") ||
+                !input["restrictions"].is_string())
+            {
+                res.status = 400;
+
+                res.set_content(
+                    json{
+                        { "error", "Invalid recipe customization input." }
+                    }.dump(),
+                    "application/json"
+                );
+
+                return;
+            }
+
+            if (input["recipeId"] <= 0 ||
+                input["recipeId"] > 2147483647)
+            {
+                res.status = 400;
+
+                res.set_content(
+                    json{
+                        { "error", "Invalid recipe ID." }
+                    }.dump(),
+                    "application/json"
+                );
+
+                return;
+            }
+
+            int recipeId =
+                input["recipeId"].get<int>();
+
+            std::string restrictions =
+                input["restrictions"].get<std::string>();
+
+            if (restrictions.find_first_not_of(" \t\r\n")
+                == std::string::npos ||
+                restrictions.size() > 2000)
+            {
+                res.status = 400;
+
+                res.set_content(
+                    json{
+                        { "error", "Please provide valid dietary requirements." }
+                    }.dump(),
+                    "application/json"
+                );
+
+                return;
+            }
+
+            try
+            {
+                std::cout
+                    << "Retrieving original recipe: "
+                    << recipeId
+                    << std::endl;
+
+                json recipe =
+                    SpoonacularClient::getRecipeDetailsJson(
+                        recipeId
+                    );
+
+                if (!recipe.is_object())
+                {
+                    throw std::runtime_error(
+                        "Original recipe is unavailable."
+                    );
+                }
+
+                bool hasIngredients =
+                    (recipe.contains("extendedIngredients") &&
+                        recipe["extendedIngredients"].is_array() &&
+                        !recipe["extendedIngredients"].empty())
+                    ||
+                    (recipe.contains("ingredients") &&
+                        recipe["ingredients"].is_array() &&
+                        !recipe["ingredients"].empty());
+
+                if (!hasIngredients)
+                {
+                    throw std::runtime_error(
+                        "Original recipe ingredients are unavailable."
+                    );
+                }
+
+                std::string recipeDetails =
+                    recipe.dump();
+
+                AIClient ai;
+
+                std::cout
+                    << "Customizing recipe with Gemini..."
+                    << std::endl;
+
+                std::string adaptedRecipe =
+                    ai.adaptRecipe(
+                        recipeDetails,
+                        restrictions
+                    );
+
+                res.set_content(
+                    json{
+                        { "recipeId", recipeId },
+                        { "adaptedRecipe", adaptedRecipe }
+                    }.dump(),
+                    "application/json"
+                );
+
+                std::cout
+                    << "Recipe customization completed."
+                    << std::endl;
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr
+                    << "Recipe customization error: "
+                    << e.what()
+                    << std::endl;
+
+                res.status = 502;
+
+                res.set_content(
+                    json{
+                        { "error", "Unable to customize this recipe. Please try again." }
                     }.dump(),
                     "application/json"
                 );

@@ -1432,157 +1432,304 @@ dialog ul {
     }
 }
 
-    #ai-assistant-dialog {
-        position: fixed;
-        inset: 0;
-        margin: auto;
-        width: min(560px, calc(100% - 32px));
-        max-width: 560px;
-        max-height: 88vh;
-        padding: 30px;
-        background: #ffffff;
-        color: var(--text);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        overflow-y: auto;
-        box-shadow: 0 24px 80px rgba(25, 62, 48, 0.20);
+#ai-assistant-dialog {
+    position: fixed;
+    /* Bottom-right corner */
+    inset: auto 30px 25px auto;
+    width: 430px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100dvh - 50px);
+    margin: 0;
+    padding: 0;
+    background: #f7f5ef;
+    color: var(--text);
+    border: none;
+    border-radius: 28px;
+    overflow: auto;
+    box-shadow: 0 20px 65px rgba(25, 62, 48, 0.24);
+}
+
+    #ai-assistant-dialog::backdrop {
+        background: rgba(25, 45, 35, 0.30);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
     }
 
-        /* Darkened background when assistant is open */
-        #ai-assistant-dialog::backdrop {
-            background: rgba(25, 62, 48, 0.48);
-            backdrop-filter: blur(3px);
+    #ai-assistant-dialog[open] {
+        animation: assistant-slide-in 0.25s ease-out;
+    }
+
+@keyframes assistant-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.assistant-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: #193e30;
+    color: #ffffff;
+}
+
+.assistant-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background: #d9edaa;
+    color: #234c3b;
+    border-radius: 15px;
+}
+
+.assistant-header-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+#ai-assistant-dialog h2 {
+    margin: 0 0 2px;
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.assistant-header-copy p {
+    margin: 0;
+    font-size: 12px;
+    color: #bfd2c5;
+}
+
+.assistant-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background: transparent;
+    color: #bfd2c5;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+    .assistant-close:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+    }
+
+.assistant-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+.assistant-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 2px 4px 4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #b9cbb9 transparent;
+}
+
+.chat-message {
+    max-width: 90%;
+    padding: 15px 16px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.65;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.welcome-message {
+    white-space: normal;
+    text-align: left;
+    width: fit-content;
+}
+
+    .welcome-message p {
+        margin: 0;
+        padding: 0;
+    }
+
+        .welcome-message p + p {
+            margin-top: 10px;
         }
 
-    /* Assistant heading */
-    .assistant-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding-right: 35px;
-        margin-bottom: 18px;
-    }
-
-    /* Assistant logo */
-    .assistant-logo {
-        display: grid;
-        place-items: center;
-        width: 55px;
-        height: 55px;
-        flex-shrink: 0;
-        background: #e7eee3;
-        color: #234c3b;
-        border-radius: 16px;
-        font-size: 32px;
-    }
-
-    /* Assistant title */
-    #ai-assistant-dialog h2 {
-        font-family: var(--font-display);
-        font-size: 30px;
-        font-weight: 800;
-        color: var(--deep);
-        margin: 5px 0 0;
-    }
-
-    .assistant-description {
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.7;
-        margin-bottom: 22px;
-    }
-
-    /* Suggested questions */
-    .assistant-suggestions {
-        display: flex;
-        flex-direction: column;
-        gap: 9px;
-        margin-bottom: 22px;
-    }
-
-        .assistant-suggestions h3 {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--forest);
-            margin: 0 0 4px;
-        }
-
-    /* Individual suggested question */
-    .assistant-prompt {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        width: 100%;
-        padding: 12px 14px;
-        background: #f7f9f5;
-        border: 1px solid #dce5d8;
-        border-radius: 10px;
+    .welcome-message strong {
         color: var(--forest);
-        font-size: 13px;
-        text-align: left;
-        cursor: pointer;
-        transition: background 0.2s ease;
+        font-weight: 700;
     }
 
-        .assistant-prompt:hover {
-            background: #e7eee3;
-        }
+.assistant-message {
+    align-self: flex-start;
+    background: #ffffff;
+    color: #425c4d;
+    border: 1px solid #e7ece4;
+    border-radius: 5px 18px 18px 18px;
+    box-shadow: 0 2px 4px rgba(25, 62, 48, 0.05);
+}
 
-        .assistant-prompt span {
-            color: #78887d;
-        }
+.user-message {
+    align-self: flex-end;
+    background: #234c3b;
+    color: #ffffff;
+    border-radius: 18px 5px 18px 18px;
+}
 
-    /* Nutrition question form */
-    #ai-assistant-dialog #nutrition-form {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+.chat-message.thinking {
+    font-style: italic;
+    color: var(--muted);
+}
+
+.chat-message.chat-error {
+    background: #fff3ef;
+    color: #a34b3c;
+    border-color: #efd5ce;
+}
+
+.assistant-suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.assistant-prompt {
+    width: 100%;
+    padding: 10px 8px;
+    background: #ffffff;
+    color: #345d49;
+    border: 1px solid #d5dfd2;
+    border-radius: 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+    .assistant-prompt:hover {
+        background: #e7eee3;
+        border-color: #9abf8f;
     }
 
-    /* User question input */
-    #ai-assistant-dialog #nutrition-question {
-        width: 100%;
-        min-height: 100px;
-        padding: 14px;
-        font: inherit;
-        font-size: 14px;
-        background: #fafbf8;
-        color: var(--text);
-        border: 1px solid #d5dfd2;
-        border-radius: 12px;
-        resize: vertical;
+    .assistant-prompt:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+#ai-assistant-dialog #nutrition-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #d5dfd2;
+    border-radius: 16px;
+}
+
+    #ai-assistant-dialog #nutrition-form:focus-within {
+        border-color: #9abf8f;
+        box-shadow: 0 0 0 3px rgba(154, 191, 143, 0.15);
+    }
+
+#ai-assistant-dialog #nutrition-question {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    color: var(--text);
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 14px;
+}
+
+    #ai-assistant-dialog #nutrition-question::placeholder {
+        color: #94a398;
+    }
+
+    #ai-assistant-dialog #nutrition-question:focus {
         outline: none;
+        box-shadow: none;
     }
 
-        #ai-assistant-dialog #nutrition-question:focus {
-            border-color: #7da77b;
-            box-shadow: 0 0 0 3px rgba(125, 167, 123, 0.15);
-        }
+.assistant-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: #285b45;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
 
-    /* Gemini response */
-    #ai-assistant-dialog #nutrition-result {
-        margin-top: 18px;
-        padding: 18px;
-        background: #eef3e9;
-        color: var(--text);
-        border: 1px solid #dce5d8;
-        border-radius: 12px;
-        font-family: var(--font-sans);
-        font-size: 14px;
-        line-height: 1.8;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
+    .assistant-send:hover {
+        background: #193e30;
     }
 
-    /* Assistant footer */
-    .assistant-footer {
-        margin: 20px 0 0;
-        text-align: center;
-        font-size: 10px;
-        color: var(--muted);
+    .assistant-send:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
+.assistant-status {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+    .assistant-status:empty {
+        display: none;
+    }
+
+    .assistant-status.error {
+        color: #a34b3c;
+    }
+
+#ai-assistant-dialog .assistant-footer {
+    margin: 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #89998e;
+}
+
+body:has(#ai-assistant-dialog[open]) {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #ai-assistant-dialog[open] {
+        animation: none;
+    }
+}
+ 
     @media (max-width: 1050px) {
 
         .ask-mate-button {
@@ -1625,18 +1772,367 @@ dialog ul {
         }
 
         #ai-assistant-dialog {
-            width: calc(100% - 24px);
-            padding: 22px;
-            border-radius: 18px;
-            max-height: 85vh;
+            inset: auto 12px 80px 12px;
+            width: auto;
+            max-width: none;
+            max-height: calc(100dvh - 100px);
+            padding: 0;
+            border-radius: 22px;
         }
 
-            #ai-assistant-dialog h2 {
-                font-size: 25px;
-            }
+        .assistant-header {
+            padding: 16px;
+        }
+
+        #ai-assistant-dialog h2 {
+            font-size: 20px;
+        }
 
         .assistant-logo {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
         }
+
+        .assistant-body {
+            padding: 15px;
+            gap: 12px;
+        }
+
+        .assistant-messages {
+            max-height: 250px;
+        }
+
+        .chat-message {
+            font-size: 13px;
+        }
+
+        .assistant-prompt {
+            font-size: 11px;
+        }
+
+        #ai-assistant-dialog #nutrition-question {
+            font-size: 16px;
+        }
+
     }
+
+/* ==========================================
+   AI RECIPE CUSTOMIZATION
+   ========================================== */
+
+/* Main customization container */
+.recipe-customization {
+    margin: 0 0 28px;
+    background: var(--cream);
+    border: 1px solid #dce5da;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+/* Dark green Mate header */
+.customization-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    background: var(--deep);
+    color: var(--white);
+}
+
+/* Mate sparkle icon */
+.customization-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: #d7eead;
+    color: var(--forest);
+    font-size: 23px;
+}
+
+/* Header title */
+.customization-header h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+/* Header subtitle */
+.customization-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #c4d9ca;
+}
+
+/* Main customization form */
+.customization-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+/* Dietary restrictions fieldset */
+.customization-fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+/* Form headings */
+.customization-label {
+    display: block;
+    margin-bottom: 7px;
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--deep);
+}
+
+/* Supporting text */
+.customization-description {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Dietary restriction grid */
+.restriction-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+}
+
+/* Individual restriction option */
+.restriction-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 43px;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid #d5dfd2;
+    border-radius: 10px;
+    color: var(--forest);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+    /* Hover over an option */
+    .restriction-option:hover {
+        background: #f0f5eb;
+        border-color: #a2b99e;
+    }
+
+    /* Selected dietary restriction */
+    .restriction-option:has(input:checked) {
+        background: #e7eee3;
+        border-color: #8eaa91;
+    }
+
+    /* Checkbox appearance */
+    .restriction-option input {
+        width: 15px;
+        height: 15px;
+        margin: 0;
+        flex-shrink: 0;
+        accent-color: var(--forest);
+    }
+
+/* Additional requirements input */
+.customization-input {
+    display: block;
+    width: 100%;
+    min-height: 85px;
+    padding: 13px 15px;
+    border: 1px solid #d5dfd2;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+    .customization-input::placeholder {
+        color: #93a39a;
+    }
+
+    .customization-input:focus {
+        outline: none;
+        border-color: #7da987;
+        box-shadow: 0 0 0 3px rgba(83, 124, 96, 0.12);
+    }
+
+/* Generate customized recipe button */
+.customize-recipe-button {
+    width: 100%;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 11px;
+    background: var(--forest);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s ease;
+}
+
+    .customize-recipe-button:hover {
+        background: #315e49;
+    }
+
+    .customize-recipe-button:disabled {
+        opacity: 0.65;
+        cursor: wait;
+    }
+
+/* Customization status messages */
+.customization-message {
+    margin: 0;
+    font-size: 13px;
+    color: #657a6b;
+}
+
+    .customization-message.error {
+        color: #a13f35;
+    }
+
+    .customization-message:empty {
+        display: none;
+    }
+
+/* Allergy safety disclaimer */
+.allergy-warning {
+    padding: 12px 14px;
+    margin: 0;
+    background: #faf1e3;
+    border: 1px solid #eadcc7;
+    border-radius: 10px;
+    color: #80623f;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+    .allergy-warning strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+.adapted-recipe {
+    padding: 20px;
+    background: #ffffff;
+    border-top: 1px solid #dce5da;
+}
+
+    .adapted-recipe[hidden] {
+        display: none;
+    }
+
+.adapted-recipe-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    margin-bottom: 12px;
+    background: #e7eee3;
+    border-radius: 20px;
+    color: var(--forest);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.adapted-recipe h3 {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--deep);
+}
+
+.adapted-recipe-section {
+    padding: 17px 0;
+    border-top: 1px solid var(--border);
+}
+
+    .adapted-recipe-section h4 {
+        margin: 0 0 10px;
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--forest);
+    }
+
+.adapted-recipe-text {
+    margin: 0;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.adapted-recipe-section.safety-section {
+    padding: 14px;
+    margin-top: 12px;
+    background: #faf1e3;
+    border: 1px solid #eadcc7;
+    border-radius: 10px;
+}
+
+.safety-section h4 {
+    color: #80623f;
+}
+
+.original-recipe-heading {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+}
+
+@media (max-width: 620px) {
+
+    .customization-header {
+        padding: 16px;
+    }
+
+    .customization-body {
+        padding: 15px;
+    }
+
+    .restriction-grid {
+        gap: 7px;
+    }
+
+    .restriction-option {
+        padding: 9px;
+        font-size: 11px;
+    }
+
+    .customization-input {
+        font-size: 16px;
+    }
+
+    .adapted-recipe {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .restriction-grid {
+        grid-template-columns: 1fr;
+    }
+}

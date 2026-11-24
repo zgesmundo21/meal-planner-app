@@ -19,4 +19,8 @@ public:
     std::string askQuestion(
         const std::string& question);
 
+    std::string adaptRecipe(
+        const std::string& recipeDetails,
+        const std::string& restrictions);
+
 };

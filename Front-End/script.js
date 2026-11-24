@@ -3,12 +3,10 @@
 
 // MealMate frontend.
 // API requests go through the C++ backend.
-// Never put Gemini or Spoonacular API keys here.
 
-// Change this URL if your C++ server uses a different port.
+// Change this URL if C++ server uses a different port.
 const API_BASE = "http://localhost:8080";
 
-// Browser storage keys.
 const STORE = {
     favorites: "mealmate-favorites-v1",
     grocery: "mealmate-grocery-v1"
@@ -16,7 +14,6 @@ const STORE = {
 
 const $ = (selector) => document.querySelector(selector);
 
-// Read saved data safely from localStorage.
 const load = (key) => {
     try {
         const data = JSON.parse(localStorage.getItem(key));
@@ -30,14 +27,12 @@ let favorites = load(STORE.favorites);
 let grocery = load(STORE.grocery);
 let searchResults = [];
 
-// Save favorites and grocery items.
 const save = () => {
     localStorage.setItem(STORE.favorites, JSON.stringify(favorites));
     localStorage.setItem(STORE.grocery, JSON.stringify(grocery));
     updateCounts();
 };
 
-// Escape text if it needs to be inserted into HTML.
 const escapeHTML = (value) =>
     String(value ?? "").replace(/[&<>"']/g, c => ({
         "&": "&amp;",
@@ -51,8 +46,6 @@ const escapeHTML = (value) =>
 // RECIPE DETAILS HELPERS
 // ==========================================
 
-// Convert Spoonacular HTML instructions into
-// readable, individual cooking steps.
 function getRecipeSteps(recipe) {
     const groups = Array.isArray(recipe.analyzedInstructions)
         ? recipe.analyzedInstructions
@@ -132,14 +125,12 @@ function getRecipeIngredients(recipe) {
         .filter(item => item.display.trim());
 }
 
-// Display informational and error messages.
 const message = (selector, text, isError = false) => {
     const node = $(selector);
     node.textContent = text;
     node.classList.toggle("error", isError);
 };
 
-// Send HTTP requests to the C++ backend.
 async function api(path, options = {}) {
     let response;
 
@@ -326,7 +317,6 @@ async function showRecipe(id) {
     dialog.showModal();
 
     try {
-        // Retrieve the full recipe from our C++ backend.
         const recipe = await api(
             `/api/recipes/${encodeURIComponent(id)}`
         );
@@ -335,14 +325,12 @@ async function showRecipe(id) {
         const equipment = getRecipeEquipment(recipe);
         const steps = getRecipeSteps(recipe);
 
-        // Only allow HTTPS images from Spoonacular.
         const image = typeof recipe.image === "string" &&
             /^https:\/\/(?:[\w-]+\.)*spoonacular\.com\//i
                 .test(recipe.image)
             ? recipe.image
             : "";
 
-        // Build the recipe details layout.
         content.innerHTML = `
             <article class="recipe-detail">
 
@@ -372,10 +360,206 @@ async function showRecipe(id) {
                         </span>
                     </div>
 
+                    <!-- AI RECIPE CUSTOMIZATION -->
+<section class="recipe-customization">
+
+    <!-- Mate Header -->
+    <div class="customization-header">
+
+        <span class="customization-icon"
+              aria-hidden="true">
+            ✧
+        </span>
+
+        <div>
+            <h3>Customize with Mate</h3>
+
+            <p>
+                Make this recipe work for you.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Customization Form -->
+    <form id="recipe-customization-form"
+          class="customization-body">
+
+        <fieldset class="customization-fieldset">
+
+            <legend class="customization-label">
+                Allergies and dietary restrictions
+            </legend>
+
+            <p class="customization-description">
+                Select all that apply.
+            </p>
+
+            <div class="restriction-grid">
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Milk allergy">
+                    <span>Milk allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Wheat allergy">
+                    <span>Wheat allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Egg allergy">
+                    <span>Egg allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Peanut allergy">
+                    <span>Peanut allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Tree nut allergy">
+                    <span>Tree nut allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Soy allergy">
+                    <span>Soy allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Fish allergy">
+                    <span>Fish allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Shellfish allergy">
+                    <span>Shellfish allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Sesame allergy">
+                    <span>Sesame allergy</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Gluten-free">
+                    <span>Gluten-free</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Vegetarian">
+                    <span>Vegetarian</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Vegan">
+                    <span>Vegan</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Lactose-free">
+                    <span>Lactose-free</span>
+                </label>
+
+                <label class="restriction-option">
+                    <input type="checkbox"
+                           name="restriction"
+                           value="Low sodium">
+                    <span>Low sodium</span>
+                </label>
+
+            </div>
+
+        </fieldset>
+
+        <!-- Additional Requirements -->
+        <div>
+
+            <label for="customization-requirements"
+                   class="customization-label">
+                Additional requirements
+            </label>
+
+            <textarea
+                id="customization-requirements"
+                class="customization-input"
+                placeholder="e.g. No coconut, no mushrooms, or other dietary requirements..."
+                maxlength="1000"
+                rows="3"></textarea>
+
+        </div>
+
+        <!-- Generate Customized Recipe -->
+        <button type="submit"
+                class="customize-recipe-button">
+            ✧ Customize my recipe
+        </button>
+
+        <!-- Status Messages -->
+        <p id="customization-message"
+           class="customization-message"
+           role="status"
+           aria-live="polite"></p>
+
+        <!-- Allergy Safety Disclaimer -->
+        <div class="allergy-warning">
+
+            <strong>Important allergy information</strong>
+
+            AI-generated recipes are suggestions and
+            are not verified for allergen safety.
+            Always check ingredient labels, manufacturer
+            information and potential cross-contact risks.
+
+        </div>
+
+    </form>
+
+    <!-- AI Customized Recipe Results -->
+    <div id="adapted-recipe-result"
+         class="adapted-recipe"
+         aria-live="polite"
+         hidden>
+    </div>
+
+</section>
+
+<!-- Original Recipe Label -->
+<p class="original-recipe-heading">
+    ORIGINAL SPOONACULAR RECIPE
+</p>
+
                     <!-- INGREDIENTS -->
                     <section class="recipe-detail-section">
 
-                        <h3>Ingredients</h3>
+                        <h3>Original ingredients</h3>
 
                         ${ingredients.length ? `
                             <ul class="recipe-ingredient-list">
@@ -394,7 +578,7 @@ async function showRecipe(id) {
                             <button id="add-recipe-ingredients"
                                     class="button button-outline"
                                     type="button">
-                                + Add ingredients to grocery list
+                                + Add original ingredients to grocery list
                             </button>
                         ` : `
                             <p>Ingredients are not available.</p>
@@ -443,6 +627,12 @@ async function showRecipe(id) {
             </article>
         `;
 
+        // Connect the AI recipe customization form.
+        setupRecipeCustomization(
+            content,
+            id
+        );
+
         // Preserve your existing grocery-list functionality.
         const addButton = content.querySelector(
             "#add-recipe-ingredients"
@@ -478,6 +668,369 @@ async function showRecipe(id) {
         content.textContent =
             `Couldn't load recipe details: ${error.message}`;
     }
+}
+
+function setupRecipeCustomization(content, recipeId) {
+
+    const form = content.querySelector(
+        "#recipe-customization-form"
+    );
+
+    if (!form) return;
+
+    const submitButton = form.querySelector(
+        "button[type='submit']"
+    );
+
+    const status = form.querySelector(
+        "#customization-message"
+    );
+
+    const additionalInput = form.querySelector(
+        "#customization-requirements"
+    );
+
+    const result = content.querySelector(
+        "#adapted-recipe-result"
+    );
+
+    function updateStatus(text, isError = false) {
+
+        status.textContent = text;
+
+        status.classList.toggle(
+            "error",
+            isError
+        );
+    }
+
+    form.addEventListener("input", () => {
+
+        result.hidden = true;
+        result.replaceChildren();
+
+        updateStatus("");
+    });
+
+    form.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        if (submitButton.disabled) {
+            return;
+        }
+
+        const selectedRestrictions = Array.from(
+            form.querySelectorAll(
+                'input[name="restriction"]:checked'
+            )
+        ).map(input => input.value);
+
+        const additionalRequirements =
+            additionalInput.value.trim();
+
+        const requirements = [
+            ...selectedRestrictions
+        ];
+
+        if (additionalRequirements) {
+
+            requirements.push(
+                additionalRequirements
+            );
+        }
+
+        if (!requirements.length) {
+
+            updateStatus(
+                "Please select or enter at least one dietary requirement.",
+                true
+            );
+
+            return;
+        }
+
+        const restrictions =
+            requirements.join("; ");
+
+        const originalButtonText =
+            submitButton.textContent;
+
+        result.hidden = true;
+        result.replaceChildren();
+
+        const controls = Array.from(
+            form.querySelectorAll(
+                "input, textarea, button"
+            )
+        );
+
+        controls.forEach(control => {
+            control.disabled = true;
+        });
+
+        submitButton.textContent =
+            "✧ Mate is customizing your recipe...";
+
+        updateStatus(
+            "Reviewing ingredients and finding suitable substitutions..."
+        );
+
+        result.setAttribute(
+            "aria-busy",
+            "true"
+        );
+
+        try {
+
+            const data = await api(
+                "/api/adapt-recipe",
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+                        recipeId: Number(recipeId),
+                        restrictions: restrictions
+                    })
+                }
+            );
+
+            if (
+                typeof data.adaptedRecipe !== "string" ||
+                !data.adaptedRecipe.trim()
+            ) {
+
+                throw new Error(
+                    "The backend did not return a valid customized recipe."
+                );
+            }
+
+            if (
+                !form.isConnected ||
+                !$("#recipe-dialog").open
+            ) {
+                return;
+            }
+
+            renderAdaptedRecipe(
+                result,
+                data.adaptedRecipe,
+                restrictions
+            );
+
+            result.hidden = false;
+
+            updateStatus(
+                "Your suggested recipe adaptation is ready!"
+            );
+
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Recipe customization error:",
+                error
+            );
+
+            updateStatus(
+                `Unable to customize recipe: ${error.message}`,
+                true
+            );
+
+        } finally {
+
+            controls.forEach(control => {
+                control.disabled = false;
+            });
+
+            submitButton.textContent =
+                originalButtonText;
+
+            result.removeAttribute(
+                "aria-busy"
+            );
+        }
+    });
+}
+
+function renderAdaptedRecipe(
+    container,
+    recipeText,
+    restrictions
+) {
+
+    container.replaceChildren();
+
+    const badge = document.createElement("span");
+
+    badge.className = "adapted-recipe-badge";
+
+    badge.textContent =
+        "✧ CUSTOMIZED BY MATE";
+
+    container.append(badge);
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        "Your customized recipe";
+
+    container.append(heading);
+
+    const requirements = document.createElement("p");
+
+    requirements.className =
+        "customization-description";
+
+    requirements.textContent =
+        `Requested adaptations: ${restrictions}`;
+
+    container.append(requirements);
+
+    const sectionHeadings = {
+
+        "ADAPTED RECIPE":
+            "Adapted recipe",
+
+        "INGREDIENT SUBSTITUTIONS":
+            "Ingredient substitutions",
+
+        "UPDATED INGREDIENTS":
+            "Updated ingredients",
+
+        "EQUIPMENT":
+            "Equipment",
+
+        "UPDATED INSTRUCTIONS":
+            "Updated instructions",
+
+        "ALLERGY AND DIETARY NOTES":
+            "Allergy and dietary notes"
+    };
+
+    const sections = [];
+
+    let currentSection = {
+        title: "",
+        lines: []
+    };
+
+    const lines = recipeText
+        .replace(/\r\n?/g, "\n")
+        .split("\n");
+
+    for (const line of lines) {
+
+        const normalized = line
+            .trim()
+            .replace(/^#+\s*/, "")
+            .replace(/\*\*/g, "")
+            .replace(/:\s*$/, "")
+            .trim()
+            .toUpperCase();
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                sectionHeadings,
+                normalized
+            )
+        ) {
+
+            if (
+                currentSection.lines.length ||
+                currentSection.title
+            ) {
+
+                sections.push(
+                    currentSection
+                );
+            }
+
+            currentSection = {
+                title: sectionHeadings[normalized],
+                lines: []
+            };
+
+        } else {
+
+            currentSection.lines.push(line);
+        }
+    }
+
+    if (
+        currentSection.lines.length ||
+        currentSection.title
+    ) {
+
+        sections.push(currentSection);
+    }
+
+    for (const section of sections) {
+
+        const sectionText =
+            section.lines.join("\n").trim();
+
+        if (!sectionText) {
+            continue;
+        }
+
+        const block =
+            document.createElement("section");
+
+        block.className =
+            "adapted-recipe-section";
+
+        if (
+            section.title ===
+            "Allergy and dietary notes"
+        ) {
+
+            block.classList.add(
+                "safety-section"
+            );
+        }
+
+        if (section.title) {
+
+            const title =
+                document.createElement("h4");
+
+            title.textContent =
+                section.title;
+
+            block.append(title);
+        }
+
+        const body =
+            document.createElement("div");
+
+        body.className =
+            "adapted-recipe-text";
+
+        body.textContent =
+            sectionText;
+
+        block.append(body);
+
+        container.append(block);
+    }
+
+    const warning =
+        document.createElement("p");
+
+    warning.className =
+        "allergy-warning";
+
+    warning.textContent =
+        "This adaptation has not been verified for allergen safety. " +
+        "Check all ingredients, labels, preparation surfaces and " +
+        "equipment before preparing or consuming the recipe.";
+
+    container.append(warning);
 }
 
 // Display and manage grocery-list items.
@@ -655,18 +1208,56 @@ $("#plan-form").addEventListener("submit", async (e) => {
     }
 });
 
+function scrollAssistantMessages() {
+
+    const messages = $("#assistant-messages");
+
+    messages.scrollTop = messages.scrollHeight;
+
+}
+
+function addAssistantMessage(text, sender) {
+
+    const messages = $("#assistant-messages");
+
+    const bubble = document.createElement("div");
+
+    bubble.classList.add("chat-message");
+
+    if (sender === "user") {
+
+        bubble.classList.add("user-message");
+
+    } else {
+
+        bubble.classList.add("assistant-message");
+
+    }
+
+    bubble.textContent = text;
+
+    messages.appendChild(bubble);
+
+    scrollAssistantMessages();
+
+    return bubble;
+
+}
+
 $("#nutrition-form").addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     const questionInput = $("#nutrition-question");
-    const result = $("#nutrition-result");
-
-    const question = questionInput.value.trim();
 
     const submitButton = $(
         "#nutrition-form button[type='submit']"
     );
+
+    const suggestionButtons =
+        document.querySelectorAll(".assistant-prompt");
+
+    const question = questionInput.value.trim();
 
     if (!question) {
 
@@ -677,30 +1268,36 @@ $("#nutrition-form").addEventListener("submit", async (e) => {
         );
 
         return;
+
     }
 
     if (submitButton.disabled) {
         return;
     }
 
-    const originalButtonText =
-        submitButton.textContent;
+    message("#nutrition-message", "");
 
-    message(
-        "#nutrition-message",
-        "Mate is thinking about your question..."
-    );
+    addAssistantMessage(question, "user");
 
-
-    result.hidden = true;
-    result.textContent = "";
+    questionInput.value = "";
 
     submitButton.disabled = true;
-    submitButton.textContent = "✧ Mate is thinking...";
 
     questionInput.readOnly = true;
 
-    result.setAttribute("aria-busy", "true");
+    suggestionButtons.forEach(button => {
+
+        button.disabled = true;
+
+    });
+
+    const loadingMessage = addAssistantMessage(
+        "Mate is thinking...",
+        "assistant"
+    );
+
+    loadingMessage.classList.add("thinking");
+
 
     try {
 
@@ -723,47 +1320,49 @@ $("#nutrition-form").addEventListener("submit", async (e) => {
 
         }
 
-        result.textContent = data.answer;
+        loadingMessage.textContent = data.answer;
 
-        result.hidden = false;
+        loadingMessage.classList.remove("thinking");
 
-        if ($("#ai-assistant-dialog").open) {
-            result.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest"
-            });
-        }
+        scrollAssistantMessages();
 
-        message(
-            "#nutrition-message",
-            "Here's what Mate found for you:"
-        );
 
     } catch (error) {
 
         console.error("Ask Mate error:", error);
 
-        message(
-            "#nutrition-message",
-            `Ask Mate is unavailable: ${error.message}`,
-            true
-        );
+        loadingMessage.textContent =
+            "Sorry, I couldn't answer your question right now. "
+            + "Please try again.";
+
+        loadingMessage.classList.remove("thinking");
+
+        loadingMessage.classList.add("chat-error");
+
+        scrollAssistantMessages();
 
 
     } finally {
 
-        // Restore the original submit button.
         submitButton.disabled = false;
-        submitButton.textContent = originalButtonText;
 
-        // Allow the user to enter another question.
         questionInput.readOnly = false;
 
-        // Remove the loading accessibility status.
-        result.removeAttribute("aria-busy");
-    }
-});
+        suggestionButtons.forEach(button => {
 
+            button.disabled = false;
+
+        });
+
+        if ($("#ai-assistant-dialog").open) {
+
+            questionInput.focus();
+
+        }
+
+    }
+
+});
 
 // Add grocery items.
 $("#grocery-form").addEventListener("submit", e => {
@@ -898,11 +1497,16 @@ function initializeAssistant() {
     }
 
     // Open the AI assistant popup.
-    askMateButton.addEventListener("click", () => {
+        askMateButton.addEventListener("click", () => {
 
         if (!assistantDialog.open) {
+
             assistantDialog.showModal();
+
             assistantQuestionInput.focus();
+
+            scrollAssistantMessages();
+
         }
 
     });
@@ -942,10 +1546,17 @@ function initializeAssistant() {
 
                 const question = button.dataset.question;
 
-                if (!question) return;
+                const submitButton = $(
+                    "#nutrition-form button[type='submit']"
+                );
+
+                if (!question || submitButton.disabled) {
+                    return;
+                }
 
                 assistantQuestionInput.value = question;
-                assistantQuestionInput.focus();
+
+                $("#nutrition-form").requestSubmit();
 
             });
 

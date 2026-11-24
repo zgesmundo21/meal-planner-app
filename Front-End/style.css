@@ -349,6 +349,126 @@ main {
     }
 }
 
+.home-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.welcome-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Current date above greeting */
+.welcome-date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #78887d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+    /* Small decorative line before the date */
+    .welcome-date::before {
+        content: "";
+        width: 24px;
+        height: 1px;
+        background: #8eaa91;
+    }
+
+/* Main greeting */
+.welcome-copy h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.15;
+    color: var(--deep);
+    margin: 10px 0 5px;
+}
+
+/* Greeting subtitle */
+.welcome-copy p {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+.ask-mate-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 320px;
+    max-width: 100%;
+    flex-shrink: 0;
+    padding: 17px 20px;
+    background: #193e30;
+    color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(25, 62, 48, 0.14);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    /* Button hover animation */
+    .ask-mate-button:hover {
+        background: #285742;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(25, 62, 48, 0.20);
+    }
+
+    .ask-mate-button:active {
+        transform: translateY(0);
+    }
+
+/* Light green sparkle icon */
+.ask-mate-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: #d7eead;
+    color: #234c3b;
+    border-radius: 12px;
+}
+
+/* Button text */
+.ask-mate-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+    .ask-mate-copy strong {
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 800;
+        color: #ffffff;
+    }
+
+    .ask-mate-copy small {
+        font-size: 11px;
+        color: #c4d9ca;
+        line-height: 1.5;
+    }
+
+/* Arrow on right side */
+.ask-mate-arrow {
+    font-size: 21px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
 .hero {
     background: #234c3b;
     border-radius: 22px;
@@ -620,7 +740,7 @@ main {
     margin-bottom: 17px;
 }
 
-    .search-row input, .form-panel input, .form-panel select, .nutrition-panel input {
+    .search-row input, .form-panel input, .form-panel select {
         width: 100%;
         min-width: 0;
         background: white;
@@ -631,7 +751,7 @@ main {
         outline: none;
     }
 
-        .search-row input:focus, .form-panel input:focus, .form-panel select:focus, .nutrition-panel input:focus {
+        .search-row input:focus, .form-panel input:focus, .form-panel select:focus {
             border-color: #77a77c;
             box-shadow: 0 0 0 3px #77a77c25;
         }
@@ -954,21 +1074,6 @@ main {
     color: #405848;
 }
 
-.nutrition-panel {
-    margin-top: 20px;
-}
-
-    .nutrition-panel p {
-        font-size: 12px;
-        color: var(--muted);
-    }
-
-    .nutrition-panel form {
-        display: flex;
-        gap: 12px;
-        margin-top: 18px;
-    }
-
 .grocery-panel {
     max-width: 760px;
 }
@@ -1135,10 +1240,6 @@ dialog ul {
         height: 65px;
     }
 
-    .topbar-greeting {
-        display: none;
-    }
-
     .mobile-nav {
         display: flex;
         position: fixed;
@@ -1253,7 +1354,7 @@ dialog ul {
             margin-bottom: 10px;
         }
 
-    .search-row, .nutrition-panel form {
+    .search-row {
         flex-direction: column;
     }
 
@@ -1327,3 +1428,212 @@ dialog ul {
         display: none;
     }
 }
+
+    #ai-assistant-dialog {
+        position: fixed;
+        inset: 0;
+        margin: auto;
+        width: min(560px, calc(100% - 32px));
+        max-width: 560px;
+        max-height: 88vh;
+        padding: 30px;
+        background: #ffffff;
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        overflow-y: auto;
+        box-shadow: 0 24px 80px rgba(25, 62, 48, 0.20);
+    }
+
+        /* Darkened background when assistant is open */
+        #ai-assistant-dialog::backdrop {
+            background: rgba(25, 62, 48, 0.48);
+            backdrop-filter: blur(3px);
+        }
+
+    /* Assistant heading */
+    .assistant-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-right: 35px;
+        margin-bottom: 18px;
+    }
+
+    /* Assistant logo */
+    .assistant-logo {
+        display: grid;
+        place-items: center;
+        width: 55px;
+        height: 55px;
+        flex-shrink: 0;
+        background: #e7eee3;
+        color: #234c3b;
+        border-radius: 16px;
+        font-size: 32px;
+    }
+
+    /* Assistant title */
+    #ai-assistant-dialog h2 {
+        font-family: var(--font-display);
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--deep);
+        margin: 5px 0 0;
+    }
+
+    .assistant-description {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 22px;
+    }
+
+    /* Suggested questions */
+    .assistant-suggestions {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        margin-bottom: 22px;
+    }
+
+        .assistant-suggestions h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--forest);
+            margin: 0 0 4px;
+        }
+
+    /* Individual suggested question */
+    .assistant-prompt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 14px;
+        background: #f7f9f5;
+        border: 1px solid #dce5d8;
+        border-radius: 10px;
+        color: var(--forest);
+        font-size: 13px;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+        .assistant-prompt:hover {
+            background: #e7eee3;
+        }
+
+        .assistant-prompt span {
+            color: #78887d;
+        }
+
+    /* Nutrition question form */
+    #ai-assistant-dialog #nutrition-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* User question input */
+    #ai-assistant-dialog #nutrition-question {
+        width: 100%;
+        min-height: 100px;
+        padding: 14px;
+        font: inherit;
+        font-size: 14px;
+        background: #fafbf8;
+        color: var(--text);
+        border: 1px solid #d5dfd2;
+        border-radius: 12px;
+        resize: vertical;
+        outline: none;
+    }
+
+        #ai-assistant-dialog #nutrition-question:focus {
+            border-color: #7da77b;
+            box-shadow: 0 0 0 3px rgba(125, 167, 123, 0.15);
+        }
+
+    /* Gemini response */
+    #ai-assistant-dialog #nutrition-result {
+        margin-top: 18px;
+        padding: 18px;
+        background: #eef3e9;
+        color: var(--text);
+        border: 1px solid #dce5d8;
+        border-radius: 12px;
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    /* Assistant footer */
+    .assistant-footer {
+        margin: 20px 0 0;
+        text-align: center;
+        font-size: 10px;
+        color: var(--muted);
+    }
+
+    @media (max-width: 1050px) {
+
+        .ask-mate-button {
+            width: 285px;
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .welcome-copy h2 {
+            font-size: 34px;
+        }
+    }
+
+    @media (max-width: 800px) {
+
+        .home-welcome {
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .welcome-copy h2 {
+            font-size: 30px;
+        }
+    }
+
+    @media (max-width: 620px) {
+
+        .home-welcome {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 18px;
+        }
+
+        .welcome-copy h2 {
+            font-size: 30px;
+        }
+
+        .ask-mate-button {
+            width: 100%;
+        }
+
+        #ai-assistant-dialog {
+            width: calc(100% - 24px);
+            padding: 22px;
+            border-radius: 18px;
+            max-height: 85vh;
+        }
+
+            #ai-assistant-dialog h2 {
+                font-size: 25px;
+            }
+
+        .assistant-logo {
+            width: 45px;
+            height: 45px;
+        }
+    }

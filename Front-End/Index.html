@@ -22,7 +22,7 @@
 <body>
 
     <div class="app-shell">
-                
+
         <aside class="sidebar" aria-label="Main navigation">
 
             <!-- MealMate Logo -->
@@ -72,13 +72,6 @@
                    class="nav-link">
                     <span>⌕</span>
                     Discover Recipes
-                </a>
-
-                <a href="#planner"
-                   data-page="planner"
-                   class="nav-link">
-                    <span>✧</span>
-                    AI Meal Planner
                 </a>
 
                 <a href="#favorites"
@@ -210,6 +203,65 @@
                 <section id="home"
                          class="page active"
                          aria-labelledby="home-title">
+
+                    <!-- Homepage Greeting and AI Assistant -->
+                    <div class="home-welcome">
+
+                        <!-- Current Date and Greeting -->
+                        <div class="welcome-copy">
+
+                            <span class="welcome-date" id="welcome-date">
+                                TODAY
+                            </span>
+
+                            <h2 id="welcome-greeting">
+                                Welcome to MealMate!
+                            </h2>
+
+                            <p>Fresh meals. Made simple.</p>
+
+                        </div>
+
+                        <!-- Ask Mate AI Assistant Button -->
+                        <button type="button"
+                                class="ask-mate-button"
+                                id="open-ai-assistant"
+                                aria-haspopup="dialog"
+                                aria-controls="ai-assistant-dialog">
+
+                            <span class="ask-mate-icon">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="23"
+                                     height="23"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.7"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <path d="M9 3 11 9 17 11 11 13 9 19 7 13 1 11 7 9 9 3Z" />
+                                    <path d="M19 3v6M16 6h6" />
+                                    <path d="M19 14v6M16 17h6" />
+
+                                </svg>
+
+                            </span>
+
+                            <span class="ask-mate-copy">
+                                <strong>Ask Mate</strong>
+                                <small>Your personal AI kitchen assistant</small>
+                            </span>
+
+                            <span class="ask-mate-arrow" aria-hidden="true">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
 
                     <!-- Homepage Hero Banner -->
                     <div class="hero">
@@ -602,61 +654,6 @@
 
                     </div>
 
-                    <!-- AI Nutrition Assistant -->
-                    <div class="panel nutrition-panel">
-
-                        <div>
-
-                            <span class="eyebrow muted">
-                                ASK A LITTLE MORE
-                            </span>
-
-                            <h2>
-                                AI Nutrition Assistant
-                            </h2>
-
-                            <p>
-                                Curious about ingredients or
-                                balanced meals? Ask a question.
-                            </p>
-
-                        </div>
-
-                        <!-- Nutrition Question Form -->
-                        <form id="nutrition-form">
-
-                            <label class="sr-only"
-                                   for="nutrition-question">
-                                Nutrition question
-                            </label>
-
-                            <input id="nutrition-question"
-                                   type="text"
-                                   placeholder="e.g. How can I add more protein to breakfast?"
-                                   required>
-
-                            <button class="button button-outline"
-                                    type="submit">
-                                Ask AI →
-                            </button>
-
-                        </form>
-
-                        <!-- Nutrition Status -->
-                        <div id="nutrition-message"
-                             class="message"
-                             role="status"
-                             aria-live="polite">
-                        </div>
-
-
-                        <!-- Nutrition Response -->
-                        <pre id="nutrition-result"
-                             class="plan-result"
-                             hidden></pre>
-
-                    </div>
-
                 </section>
 
                 <!-- ==============================
@@ -806,12 +803,7 @@
             ⌕
             <small>Recipes</small>
         </a>
-
-        <a href="#planner" data-page="planner">
-            ✧
-            <small>Planner</small>
-        </a>
-
+                
         <a href="#favorites" data-page="favorites">
             ♡
             <small>Saved</small>
@@ -841,6 +833,107 @@
         <!-- Recipe Information -->
         <div id="recipe-dialog-content">
         </div>
+
+    </dialog>
+
+    <dialog id="ai-assistant-dialog"
+            class="ai-assistant-dialog"
+            aria-labelledby="assistant-title">
+
+        <!-- Close Assistant Button -->
+        <button id="close-ai-assistant"
+                class="dialog-close"
+                type="button"
+                aria-label="Close AI assistant">
+            ×
+        </button>
+
+        <!-- Assistant Header -->
+        <div class="assistant-header">
+
+            <span class="assistant-logo" aria-hidden="true">
+                ✧
+            </span>
+
+            <div>
+                <span class="eyebrow muted">
+                    YOUR AI KITCHEN COMPANION
+                </span>
+
+                <h2 id="assistant-title">Ask Mate</h2>
+            </div>
+
+        </div>
+
+        <p class="assistant-description">
+            From ingredient substitutions to balanced meals,
+            I'm here to help make everyday eating a little easier.
+        </p>
+
+        <!-- Suggested Questions -->
+        <div class="assistant-suggestions">
+
+            <h3>What can I help you with?</h3>
+
+            <button type="button"
+                    class="assistant-prompt"
+                    data-question="How can I add more protein to breakfast?">
+                How can I add more protein to breakfast?
+                <span>↗</span>
+            </button>
+
+            <button type="button"
+                    class="assistant-prompt"
+                    data-question="What can I substitute for eggs?">
+                What can I substitute for eggs?
+                <span>↗</span>
+            </button>
+
+            <button type="button"
+                    class="assistant-prompt"
+                    data-question="Suggest a quick, budget-friendly dinner.">
+                Suggest a quick, budget-friendly dinner.
+                <span>↗</span>
+            </button>
+
+        </div>
+
+        <!-- Gemini Nutrition Assistant Form -->
+        <form id="nutrition-form">
+
+            <label class="sr-only"
+                   for="nutrition-question">
+                Ask Mate a question
+            </label>
+
+            <textarea id="nutrition-question"
+                      placeholder="Ask me anything about food or nutrition..."
+                      rows="3"
+                      maxlength="1000"
+                      required></textarea>
+
+            <button class="button button-primary full"
+                    type="submit">
+                ✧ Ask Mate
+            </button>
+
+        </form>
+
+        <!-- Gemini Status Message -->
+        <div id="nutrition-message"
+             class="message"
+             role="status"
+             aria-live="polite">
+        </div>
+
+        <!-- Gemini AI Response -->
+        <pre id="nutrition-result"
+             class="plan-result"
+             hidden></pre>
+
+        <p class="assistant-footer">
+            Powered by Gemini · Made for your everyday kitchen
+        </p>
 
     </dialog>
 

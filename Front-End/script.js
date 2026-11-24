@@ -47,7 +47,6 @@ const escapeHTML = (value) =>
         "'": "&#39;"
     }[c]));
 
-
 // ==========================================
 // RECIPE DETAILS HELPERS
 // ==========================================
@@ -657,69 +656,96 @@ $("#plan-form").addEventListener("submit", async (e) => {
 });
 
 $("#nutrition-form").addEventListener("submit", async (e) => {
+      
     e.preventDefault();
 
-    const question = $("#nutrition-question").value.trim();
+    const questionInput = $("#nutrition-question");
+    const result = $("#nutrition-result");
+
+    const question = questionInput.value.trim();
 
     const submitButton = $(
         "#nutrition-form button[type='submit']"
     );
 
     if (!question) {
+
         message(
             "#nutrition-message",
-            "Please enter a nutrition question.",
+            "Please enter a question.",
             true
         );
+
         return;
     }
 
+    if (submitButton.disabled) {
+        return;
+    }
+
+    const originalButtonText =
+        submitButton.textContent;
+
     message(
         "#nutrition-message",
-        "Gemini is preparing your answer..."
+        "Mate is thinking about your question..."
     );
 
-    $("#nutrition-result").hidden = true;
-
+    
+    result.hidden = true;
+    result.textContent = "";
+        
     submitButton.disabled = true;
-    submitButton.textContent = "Thinking...";
+    submitButton.textContent = "✧ Thinking...";
 
     try {
+
         const data = await api("/api/nutrition", {
+
             method: "POST",
+
             body: JSON.stringify({
                 question: question
             })
+
         });
 
         if (typeof data.answer !== "string" ||
             !data.answer.trim()) {
+
             throw new Error(
                 "The backend did not return a valid answer."
             );
+
         }
 
-        $("#nutrition-result").textContent = data.answer;
-        $("#nutrition-result").hidden = false;
+        result.textContent = data.answer;
+
+        result.hidden = false;
 
         message(
             "#nutrition-message",
-            "Here's Gemini's response:"
+            "Here's what Mate found for you:"
         );
 
     } catch (error) {
-        console.error("Gemini nutrition error:", error);
+
+        console.error("Ask Mate error:", error);
 
         message(
             "#nutrition-message",
-            `Nutrition assistant unavailable: ${error.message}`,
+            `Ask Mate is unavailable: ${error.message}`,
             true
         );
 
     } finally {
+
         submitButton.disabled = false;
-        submitButton.textContent = "Ask AI →";
+
+        submitButton.textContent =
+            originalButtonText;
     }
+
 });
 
 // Add grocery items.
@@ -757,6 +783,52 @@ $("#recipe-dialog").addEventListener("click", e => {
         $("#recipe-dialog").close();
     }
 });
+function updateHomeGreeting() {
+
+    const now = new Date();
+
+    const dateElement =
+        document.querySelector(".welcome-date");
+
+    const greetingElement =
+        document.querySelector(".welcome-copy h2");
+
+    if (dateElement) {
+
+        dateElement.textContent =
+            now.toLocaleDateString("en-CA", {
+                weekday: "long",
+                month: "long",
+                day: "numeric"
+            }).toUpperCase();
+
+    }
+
+    const hour = now.getHours();
+
+    let greeting;
+
+    if (hour < 12) {
+
+        greeting = "Good morning!";
+
+    } else if (hour < 17) {
+
+        greeting = "Good afternoon!";
+
+    } else {
+
+        greeting = "Good evening!";
+
+    }
+
+    if (greetingElement) {
+
+        greetingElement.textContent = greeting;
+
+    }
+
+}
 
 // Initialize MealMate.
 updateCounts();
@@ -764,6 +836,7 @@ renderFavorites();
 renderGrocery();
 navigate();
 checkAPI();
+updateHomeGreeting();
 
 const topbarSearchForm =
     document.getElementById("topbar-search-form");
@@ -794,13 +867,86 @@ topbarSearchForm?.addEventListener("submit", function (event) {
         return;
     }
 
-    // Copy the search into Discover Recipes
     recipeInput.value = searchTerm;
 
-    // Navigate to the Recipes section
     window.location.hash = "recipes";
 
-    // Run the existing recipe search handler
     recipeForm.requestSubmit();
 
 });
+
+const askMateButton =
+    document.querySelector(".ask-mate-button");
+
+const assistantDialog =
+    document.getElementById("ai-assistant-dialog");
+
+const closeAssistantButton =
+    assistantDialog?.querySelector(".dialog-close");
+
+const assistantQuestionInput =
+    document.getElementById("nutrition-question");
+
+askMateButton?.addEventListener("click", (event) => {
+
+    event.preventDefault();
+
+    if (assistantDialog && !assistantDialog.open) {
+
+        assistantDialog.showModal();
+
+        assistantQuestionInput?.focus();
+    }
+
+});
+
+closeAssistantButton?.addEventListener("click", () => {
+
+    assistantDialog.close();
+
+});
+
+assistantDialog?.addEventListener("click", (event) => {
+
+    const bounds =
+        assistantDialog.getBoundingClientRect();
+
+    const clickedOutside =
+        event.clientX < bounds.left ||
+        event.clientX > bounds.right ||
+        event.clientY < bounds.top ||
+        event.clientY > bounds.bottom;
+
+    if (event.target === assistantDialog && clickedOutside) {
+
+        assistantDialog.close();
+    }
+
+});
+
+assistantDialog?.addEventListener("close", () => {
+
+    askMateButton?.focus();
+
+});
+
+document.querySelectorAll(".assistant-prompt")
+    .forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            const question =
+                button.dataset.question ||
+                button.dataset.prompt ||
+                button.textContent.trim();
+
+            if (assistantQuestionInput) {
+
+                assistantQuestionInput.value = question;
+
+                assistantQuestionInput.focus();
+            }
+
+        });
+
+    });

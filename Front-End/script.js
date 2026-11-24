@@ -656,7 +656,7 @@ $("#plan-form").addEventListener("submit", async (e) => {
 });
 
 $("#nutrition-form").addEventListener("submit", async (e) => {
-      
+
     e.preventDefault();
 
     const questionInput = $("#nutrition-question");
@@ -691,12 +691,16 @@ $("#nutrition-form").addEventListener("submit", async (e) => {
         "Mate is thinking about your question..."
     );
 
-    
+
     result.hidden = true;
     result.textContent = "";
-        
+
     submitButton.disabled = true;
-    submitButton.textContent = "✧ Thinking...";
+    submitButton.textContent = "✧ Mate is thinking...";
+
+    questionInput.readOnly = true;
+
+    result.setAttribute("aria-busy", "true");
 
     try {
 
@@ -723,6 +727,13 @@ $("#nutrition-form").addEventListener("submit", async (e) => {
 
         result.hidden = false;
 
+        if ($("#ai-assistant-dialog").open) {
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+
         message(
             "#nutrition-message",
             "Here's what Mate found for you:"
@@ -738,15 +749,21 @@ $("#nutrition-form").addEventListener("submit", async (e) => {
             true
         );
 
+
     } finally {
 
+        // Restore the original submit button.
         submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
 
-        submitButton.textContent =
-            originalButtonText;
+        // Allow the user to enter another question.
+        questionInput.readOnly = false;
+
+        // Remove the loading accessibility status.
+        result.removeAttribute("aria-busy");
     }
-
 });
+
 
 // Add grocery items.
 $("#grocery-form").addEventListener("submit", e => {
@@ -783,60 +800,49 @@ $("#recipe-dialog").addEventListener("click", e => {
         $("#recipe-dialog").close();
     }
 });
+
+// ==========================================
+// HOMEPAGE DATE AND DYNAMIC GREETING
+// ==========================================
+
 function updateHomeGreeting() {
 
     const now = new Date();
 
-    const dateElement =
-        document.querySelector(".welcome-date");
+    // Locate the greeting elements in Index.html.
+    const dateElement = $("#welcome-date");
+    const greetingElement = $("#welcome-greeting");
 
-    const greetingElement =
-        document.querySelector(".welcome-copy h2");
-
+    // Display the current date.
     if (dateElement) {
-
-        dateElement.textContent =
-            now.toLocaleDateString("en-CA", {
+        dateElement.textContent = now.toLocaleDateString(
+            "en-CA",
+            {
                 weekday: "long",
                 month: "long",
                 day: "numeric"
-            }).toUpperCase();
-
+            }
+        ).toUpperCase();
     }
 
+    // Determine the appropriate greeting.
     const hour = now.getHours();
 
     let greeting;
 
     if (hour < 12) {
-
         greeting = "Good morning!";
-
     } else if (hour < 17) {
-
         greeting = "Good afternoon!";
-
     } else {
-
         greeting = "Good evening!";
-
     }
 
+    // Update the homepage greeting.
     if (greetingElement) {
-
         greetingElement.textContent = greeting;
-
     }
-
 }
-
-// Initialize MealMate.
-updateCounts();
-renderFavorites();
-renderGrocery();
-navigate();
-checkAPI();
-updateHomeGreeting();
 
 const topbarSearchForm =
     document.getElementById("topbar-search-form");
@@ -875,78 +881,88 @@ topbarSearchForm?.addEventListener("submit", function (event) {
 
 });
 
-const askMateButton =
-    document.querySelector(".ask-mate-button");
+function initializeAssistant() {
 
-const assistantDialog =
-    document.getElementById("ai-assistant-dialog");
+    // Locate the assistant elements.
+    const askMateButton = $("#open-ai-assistant");
+    const assistantDialog = $("#ai-assistant-dialog");
+    const closeAssistantButton = $("#close-ai-assistant");
+    const assistantQuestionInput = $("#nutrition-question");
 
-const closeAssistantButton =
-    assistantDialog?.querySelector(".dialog-close");
+    // Check that the necessary HTML elements exist.
+    if (!askMateButton || !assistantDialog ||
+        !closeAssistantButton || !assistantQuestionInput) {
 
-const assistantQuestionInput =
-    document.getElementById("nutrition-question");
-
-askMateButton?.addEventListener("click", (event) => {
-
-    event.preventDefault();
-
-    if (assistantDialog && !assistantDialog.open) {
-
-        assistantDialog.showModal();
-
-        assistantQuestionInput?.focus();
+        console.warn("Ask Mate assistant elements not found.");
+        return;
     }
 
-});
+    // Open the AI assistant popup.
+    askMateButton.addEventListener("click", () => {
 
-closeAssistantButton?.addEventListener("click", () => {
+        if (!assistantDialog.open) {
+            assistantDialog.showModal();
+            assistantQuestionInput.focus();
+        }
 
-    assistantDialog.close();
+    });
 
-});
-
-assistantDialog?.addEventListener("click", (event) => {
-
-    const bounds =
-        assistantDialog.getBoundingClientRect();
-
-    const clickedOutside =
-        event.clientX < bounds.left ||
-        event.clientX > bounds.right ||
-        event.clientY < bounds.top ||
-        event.clientY > bounds.bottom;
-
-    if (event.target === assistantDialog && clickedOutside) {
-
+    // Close the assistant using the X button.
+    closeAssistantButton.addEventListener("click", () => {
         assistantDialog.close();
-    }
+    });
 
-});
+    // Close the assistant when clicking outside the popup.
+    assistantDialog.addEventListener("click", (event) => {
 
-assistantDialog?.addEventListener("close", () => {
+        const bounds = assistantDialog.getBoundingClientRect();
 
-    askMateButton?.focus();
+        const clickedOutside =
+            event.clientX < bounds.left ||
+            event.clientX > bounds.right ||
+            event.clientY < bounds.top ||
+            event.clientY > bounds.bottom;
 
-});
+        if (event.target === assistantDialog && clickedOutside) {
+            assistantDialog.close();
+        }
 
-document.querySelectorAll(".assistant-prompt")
-    .forEach((button) => {
+    });
 
-        button.addEventListener("click", () => {
+    // Return keyboard focus to the homepage button.
+    assistantDialog.addEventListener("close", () => {
+        askMateButton.focus();
+    });
 
-            const question =
-                button.dataset.question ||
-                button.dataset.prompt ||
-                button.textContent.trim();
+    // Handle suggested AI questions.
+    assistantDialog.querySelectorAll(".assistant-prompt")
+        .forEach((button) => {
 
-            if (assistantQuestionInput) {
+            button.addEventListener("click", () => {
+
+                const question = button.dataset.question;
+
+                if (!question) return;
 
                 assistantQuestionInput.value = question;
-
                 assistantQuestionInput.focus();
-            }
+
+            });
 
         });
 
-    });
+}
+
+updateHomeGreeting();
+
+initializeAssistant();
+
+setInterval(updateHomeGreeting, 60000);
+
+updateCounts();
+renderFavorites();
+renderGrocery();
+
+navigate();
+
+checkAPI();

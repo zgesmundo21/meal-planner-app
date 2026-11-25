@@ -73,6 +73,15 @@
                     Discover Recipes
                 </a>
 
+                <a href="#planner"
+                   data-page="planner"
+                   class="nav-link">
+
+                    <span>✧</span>
+                    AI Meal Planner
+
+                </a>
+
                 <a href="#favorites"
                    data-page="favorites"
                    class="nav-link">
@@ -548,7 +557,6 @@
                                 Let's make your meal plan
                             </h2>
 
-
                             <!-- Meal Goal -->
                             <label for="goal">
                                 What's your goal?
@@ -576,8 +584,27 @@
                                     Quick & easy
                                 </option>
 
-                            </select>
+                                <option value="high fibre balanced meals">
+                                    More fibre
+                                </option>
 
+                                <option value="plant-based meals">
+                                    Plant-based eating
+                                </option>
+
+                                <option value="affordable student-friendly meals">
+                                    Student-friendly meals
+                                </option>
+
+                                <option value="meals suitable for meal preparation">
+                                    Weekly meal prep
+                                </option>
+
+                                <option value="Mediterranean-style balanced meals">
+                                    Mediterranean-style eating
+                                </option>
+
+                            </select>
 
                             <!-- Calorie Target -->
                             <label for="calories">
@@ -586,11 +613,16 @@
 
                             <input id="calories"
                                    type="number"
-                                   min="500"
+                                   min="1200"
                                    max="6000"
+                                   step="1"
                                    value="2000"
                                    required>
 
+                            <small class="planner-help">
+                                Calorie needs vary between individuals.
+                                This is a planning preference, not a recommended intake.
+                            </small>
 
                             <!-- Number of Days -->
                             <label for="days">
@@ -613,6 +645,204 @@
 
                             </select>
 
+                            <!-- =====================================
+    MEAL PLANNER DIETARY RESTRICTIONS
+    ===================================== -->
+
+                            <fieldset class="customization-fieldset planner-restrictions">
+
+                                <legend class="customization-label">
+                                    Allergies and dietary restrictions
+                                </legend>
+
+                                <p class="customization-description">
+                                    Select all that apply.
+                                </p>
+
+                                <div class="restriction-grid">
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Milk allergy">
+                                        <span>Milk allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Wheat allergy">
+                                        <span>Wheat allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Egg allergy">
+                                        <span>Egg allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Peanut allergy">
+                                        <span>Peanut allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Tree nut allergy">
+                                        <span>Tree nut allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Soy allergy">
+                                        <span>Soy allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Fish allergy">
+                                        <span>Fish allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Shellfish allergy">
+                                        <span>Shellfish allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Sesame allergy">
+                                        <span>Sesame allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Mustard allergy">
+                                        <span>Mustard allergy</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Gluten-free">
+                                        <span>Gluten-free</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Vegetarian">
+                                        <span>Vegetarian</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Vegan">
+                                        <span>Vegan</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Lactose-free">
+                                        <span>Lactose-free</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Low sodium">
+                                        <span>Low sodium</span>
+                                    </label>
+
+                                    <label class="restriction-option">
+                                        <input type="checkbox"
+                                               name="plan-restriction"
+                                               value="Avoid sulphites">
+                                        <span>Avoid sulphites</span>
+                                    </label>
+
+                                </div>
+
+                            </fieldset>
+
+                            <!-- Maximum Cooking Time -->
+
+                            <label for="plan-cooking-time">
+                                Maximum cooking time per meal
+                            </label>
+
+                            <select id="plan-cooking-time">
+
+                                <option value="0">
+                                    No preference
+                                </option>
+
+                                <option value="15">
+                                    15 minutes
+                                </option>
+
+                                <option value="30" selected>
+                                    30 minutes
+                                </option>
+
+                                <option value="45">
+                                    45 minutes
+                                </option>
+
+                                <option value="60">
+                                    60 minutes
+                                </option>
+
+                                <option value="90">
+                                    90 minutes
+                                </option>
+
+                            </select>
+
+                            <!-- Additional Personalization -->
+
+                            <label for="plan-requirements">
+                                Additional requirements
+                            </label>
+                            
+                            <textarea id="plan-requirements"
+                                      class="customization-input"
+                                      rows="4"
+                                      maxlength="1000"
+                                      placeholder="e.g. $75 weekly budget, no mushrooms, limited kitchen equipment, meals for one person..."></textarea>
+
+                            <small class="planner-help">
+                                Include any other allergies, ingredients to avoid,
+                                budget requirements, or cooking preferences.
+                            </small>
+
+                            <!-- AI Safety Information -->
+
+                            <div class="allergy-warning">
+
+                                <strong>Important dietary information</strong>
+
+                                <p>
+                                    AI-generated meal plans are suggestions.
+                                    Nutritional values are estimates and meals
+                                    are not verified for allergen safety.
+                                    Always check ingredient labels and
+                                    consider cross-contact risks.
+                                </p>
+
+                            </div>
 
                             <!-- Generate Meal Plan -->
                             <button class="button button-primary full"
@@ -640,14 +870,15 @@
                                  role="status"
                                  aria-live="polite">
 
-                                Your meal plan will appear here
-                                when the backend is connected.
+                                Choose your preferences and let Mate create
+                                a personalized meal plan for you.
 
                             </div>
 
-                            <pre id="plan-result"
-                                 class="plan-result"
-                                 hidden></pre>
+                            <div id="plan-result"
+                                 class="meal-plan-results"
+                                 hidden>
+                            </div>
 
                         </div>
 
@@ -801,6 +1032,11 @@
         <a href="#recipes" data-page="recipes">
             ⌕
             <small>Recipes</small>
+        </a>
+
+        <a href="#planner" data-page="planner">
+            ✧
+            <small>AI Planner</small>
         </a>
 
         <a href="#favorites" data-page="favorites">

@@ -9,7 +9,10 @@ public:
     std::string generateMealPlan(
         const std::string& goal,
         int calories,
-        int days);
+        int days,
+        const std::string& restrictions = "",
+        int cookingTime = 0,
+        const std::string& requirements = "");
 
     std::string generateMealPlanFromRecipes(
         const std::string& goal,

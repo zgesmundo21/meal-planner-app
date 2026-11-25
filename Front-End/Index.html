@@ -503,7 +503,6 @@
 
                     </form>
 
-                    <!-- Search Status Messages -->
                     <div id="recipe-message"
                          class="message"
                          role="status"
@@ -514,10 +513,36 @@
 
                     </div>
 
-
-                    <!-- Recipe Cards Appear Here -->
                     <div id="recipe-results"
                          class="recipe-grid">
+                    </div>
+
+                    <div id="recipe-pagination"
+                         class="recipe-pagination"
+                         hidden>
+
+                        <p id="recipe-count"
+                           class="recipe-count"
+                           aria-live="polite">
+                        </p>
+
+                        <div class="recipe-progress"
+                             aria-hidden="true">
+
+                            <div id="recipe-progress-fill"
+                                 class="recipe-progress-fill">
+                            </div>
+
+                        </div>
+
+                        <button id="load-more-recipes"
+                                class="load-more-button"
+                                type="button">
+
+                            Load more recipes ↓
+
+                        </button>
+
                     </div>
 
                 </section>
@@ -548,8 +573,7 @@
                     </div>
 
                     <div class="planner-grid">
-
-                        <!-- Meal Planner Form -->
+                                                
                         <form id="plan-form"
                               class="panel form-panel">
 
@@ -557,7 +581,6 @@
                                 Let's make your meal plan
                             </h2>
 
-                            <!-- Meal Goal -->
                             <label for="goal">
                                 What's your goal?
                             </label>
@@ -606,7 +629,6 @@
 
                             </select>
 
-                            <!-- Calorie Target -->
                             <label for="calories">
                                 Daily calorie target
                             </label>
@@ -624,7 +646,6 @@
                                 This is a planning preference, not a recommended intake.
                             </small>
 
-                            <!-- Number of Days -->
                             <label for="days">
                                 How many days?
                             </label>

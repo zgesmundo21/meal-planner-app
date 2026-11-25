@@ -532,7 +532,7 @@ std::vector<std::string> SpoonacularClient::getEquipment(
     if (data.contains("analyzedInstructions") &&
         !data["analyzedInstructions"].empty())
     {
-        auto steps =
+        const auto& steps =
             data["analyzedInstructions"][0]["steps"];
 
         for (auto& step : steps)
@@ -557,7 +557,9 @@ std::vector<std::string> SpoonacularClient::getEquipment(
 // ==========================================
 
 nlohmann::json SpoonacularClient::searchRecipesJson(
-    const std::string& query)
+    const std::string& query,
+    int number,
+    int offset)
 {
     std::string apiKey = readSpoonacularApiKey();
 
@@ -574,7 +576,8 @@ nlohmann::json SpoonacularClient::searchRecipesJson(
         },
         cpr::Parameters{
             { "query", query },
-            { "number", "10" }
+            { "number", std::to_string(number) },
+            { "offset", std::to_string(offset) }
         },
         cpr::Header{
             { "x-api-key", apiKey }
@@ -629,8 +632,25 @@ nlohmann::json SpoonacularClient::searchRecipesJson(
             });
     }
 
+    int totalResults = data.at("totalResults").get<int>();
+
+    int returnedCount =
+        static_cast<int>(data["results"].size());
+
+    int nextOffset = offset + returnedCount;
+
+    bool hasMore =
+        returnedCount > 0 &&
+        nextOffset < totalResults &&
+        nextOffset <= 900;
+
     return {
-        { "recipes", recipes }
+        { "recipes", recipes },
+        { "totalResults", totalResults },
+        { "number", number },
+        { "offset", offset },
+        { "nextOffset", nextOffset },
+        { "hasMore", hasMore }
     };
 }
 
@@ -657,7 +677,7 @@ nlohmann::json SpoonacularClient::getRecipeDetailsJson(int recipeId)
             "/information"
         },
         cpr::Parameters{
-            { "includeNutrition", "false" }
+            { "includeNutrition", "true" }
         },
         cpr::Header{
             { "x-api-key", apiKey }

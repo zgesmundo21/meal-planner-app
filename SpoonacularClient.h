@@ -23,10 +23,12 @@ public:
 
     void displayRecipeDetails(
         int recipeId);
-    
+      
     static nlohmann::json searchRecipesJson(
-        const std::string& query
-    );
+        const std::string& query,
+        int number = 12,
+        int offset = 0);
 
-    static nlohmann::json getRecipeDetailsJson(int recipeId);
+    static nlohmann::json getRecipeDetailsJson(
+        int recipeId);
 };

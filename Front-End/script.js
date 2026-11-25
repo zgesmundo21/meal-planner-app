@@ -30,6 +30,18 @@ let favorites = load(STORE.favorites);
 let grocery = load(STORE.grocery);
 let searchResults = [];
 
+const RECIPES_PER_PAGE = 12;
+
+let currentRecipeQuery = "";
+
+let recipeOffset = 0;
+
+let totalRecipeResults = 0;
+
+let hasMoreRecipes = false;
+
+let isLoadingRecipes = false;
+
 const save = () => {
     localStorage.setItem(STORE.favorites, JSON.stringify(favorites));
     localStorage.setItem(STORE.grocery, JSON.stringify(grocery));
@@ -1102,49 +1114,219 @@ async function checkAPI() {
     }
 }
 
-// Listen for navigation changes.
 window.addEventListener("hashchange", navigate);
 
-// Recipe search form.
-$("#search-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+function updateRecipePagination() {
 
-    const query = $("#recipe-query").value.trim();
-    if (!query) return;
+    const pagination = $("#recipe-pagination");
 
-    message("#recipe-message", "Searching recipes...");
-    $("#recipe-results").replaceChildren();
+    const loadMoreButton = $("#load-more-recipes");
+
+    const count = $("#recipe-count");
+
+    const progress = $("#recipe-progress-fill");
+
+    pagination.hidden = searchResults.length === 0;
+
+    const displayed = searchResults.length;
+
+    count.textContent =
+        `Showing ${displayed.toLocaleString()} of `
+        + `${totalRecipeResults.toLocaleString()} recipes`;
+
+    const percentage =
+        totalRecipeResults > 0
+            ? (displayed / totalRecipeResults) * 100
+            : 0;
+
+    progress.style.width =
+        `${Math.min(100, percentage)}%`;
+
+    loadMoreButton.hidden = !hasMoreRecipes;
+
+    loadMoreButton.disabled = isLoadingRecipes;
+
+    loadMoreButton.textContent =
+        isLoadingRecipes
+            ? "Loading more recipes..."
+            : "Load more recipes ↓";
+}
+
+async function fetchRecipes(reset = false) {
+
+    if (isLoadingRecipes) {
+        return;
+    }
+
+    if (!currentRecipeQuery) {
+        return;
+    }
+
+    if (!reset && !hasMoreRecipes) {
+        return;
+    }
+
+    const searchButton =
+        $("#search-form button[type='submit']")
+        || $("#search-form button");
+
+    if (reset) {
+
+        recipeOffset = 0;
+
+        totalRecipeResults = 0;
+
+        hasMoreRecipes = false;
+
+        searchResults = [];
+
+        $("#recipe-results").replaceChildren();
+
+        $("#recipe-pagination").hidden = true;
+    }
+
+    isLoadingRecipes = true;
+
+    searchButton.disabled = true;
+
+    updateRecipePagination();
+
+    message(
+        "#recipe-message",
+        reset
+            ? "Searching recipes..."
+            : "Loading more recipes..."
+    );
 
     try {
+
+        const params = new URLSearchParams({
+
+            query: currentRecipeQuery,
+
+            number: String(RECIPES_PER_PAGE),
+
+            offset: String(recipeOffset)
+
+        });
+
         const data = await api(
-            `/api/recipes?query=${encodeURIComponent(query)}`
+            `/api/recipes?${params.toString()}`
         );
 
-        if (!Array.isArray(data.recipes)) {
-            throw new Error("Expected a recipes array from the backend.");
+        if (!Array.isArray(data.recipes) ||
+            !Number.isInteger(data.totalResults) ||
+            !Number.isInteger(data.nextOffset) ||
+            typeof data.hasMore !== "boolean" ||
+            data.totalResults < 0 ||
+            data.nextOffset < recipeOffset ||
+            (data.hasMore &&
+             data.nextOffset <= recipeOffset)) {
+
+            throw new Error(
+                "Invalid recipe response from the backend."
+            );
         }
 
-        searchResults = data.recipes
+        const newRecipes = data.recipes
             .map(normalizeRecipe)
-            .filter(r => Number.isFinite(r.id));
+            .filter(recipe =>
+                Number.isFinite(recipe.id)
+            );
+
+        const existingIds = new Set(
+            searchResults.map(recipe => recipe.id)
+        );
+
+        for (const recipe of newRecipes) {
+
+            if (!existingIds.has(recipe.id)) {
+
+                searchResults.push(recipe);
+
+                existingIds.add(recipe.id);
+            }
+        }
+
+        totalRecipeResults = data.totalResults;
+
+        recipeOffset = data.nextOffset;
+
+        hasMoreRecipes = data.hasMore;
 
         renderRecipes();
 
         message(
             "#recipe-message",
+            
             searchResults.length
-                ? `${searchResults.length} recipes found.`
-                : "No recipes found. Try a different search."
+        ? `${totalRecipeResults.toLocaleString()} matching recipes found.`
+        : "No recipes found. Try a different search."
+);
+
+    } catch (error) {
+
+        console.error(
+            "Recipe pagination error:",
+            error
         );
-    } catch (err) {
+
         message(
             "#recipe-message",
-            `Recipe search unavailable: ${err.message}`,
+
+            reset
+                ? `Recipe search unavailable: ${error.message}`
+                : `Unable to load more recipes: ${error.message}`,
+
             true
         );
-    }
-});
 
+    } finally {
+
+        isLoadingRecipes = false;
+
+        searchButton.disabled = false;
+
+        updateRecipePagination();
+    }
+}
+
+$("#search-form").addEventListener(
+    "submit",
+    async (e) => {
+
+        e.preventDefault();
+
+        if (isLoadingRecipes) {
+            return;
+        }
+
+        const query =
+            $("#recipe-query").value.trim();
+
+        if (!query) {
+            return;
+        }
+
+        currentRecipeQuery = query;
+
+        await fetchRecipes(true);
+    }
+);
+
+$("#load-more-recipes").addEventListener(
+    "click",
+    async () => {
+
+        if (isLoadingRecipes ||
+            !hasMoreRecipes) {
+
+            return;
+        }
+
+        await fetchRecipes(false);
+    }
+);
 function renderMealPlan(plan) {
 
     const container = $("#plan-result");

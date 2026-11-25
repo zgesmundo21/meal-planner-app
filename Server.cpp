@@ -16,7 +16,7 @@ using json = nlohmann::json;
 
 namespace fs = std::filesystem;
 
-std::string locateFrontendFolder()
+static std::string locateFrontendFolder()
 {
     fs::path current = fs::current_path();
 
@@ -172,10 +172,75 @@ int main()
                 return;
             }
 
+            int number = 12;
+
+            int offset = 0;
+
+            try
+            {
+                if (req.has_param("number"))
+                {
+                    std::string value =
+                        req.get_param_value("number");
+
+                    size_t parsed = 0;
+
+                    number = std::stoi(value, &parsed);
+
+                    if (parsed != value.size())
+                    {
+                        throw std::invalid_argument("Invalid number");
+                    }
+                }
+
+                if (req.has_param("offset"))
+                {
+                    std::string value =
+                        req.get_param_value("offset");
+
+                    size_t parsed = 0;
+
+                    offset = std::stoi(value, &parsed);
+
+                    if (parsed != value.size())
+                    {
+                        throw std::invalid_argument("Invalid offset");
+                    }
+                }
+
+                if (number < 1 || number > 24 ||
+                    offset < 0 || offset > 900)
+                {
+                    throw std::invalid_argument(
+                        "Pagination values are out of range."
+                    );
+                }
+            }
+            catch (const std::exception&)
+            {
+                res.status = 400;
+
+                res.set_content(
+                    json{
+                        {
+                            "error",
+                            "Invalid recipe pagination parameters."
+                        }
+                    }.dump(),
+                    "application/json"
+                );
+
+                return;
+            }
+
             try
             {                
                 json results =
-                    SpoonacularClient::searchRecipesJson(query);
+                    SpoonacularClient::searchRecipesJson(
+                        query,
+                        number,
+                        offset
+                    );
 
                 res.set_content(
                     results.dump(),
@@ -185,6 +250,10 @@ int main()
                 std::cout
                     << "Recipe search completed: "
                     << query
+                    << " | Number: "
+                    << number
+                    << " | Offset: "
+                    << offset
                     << std::endl;
             }
             catch (const std::exception& e)

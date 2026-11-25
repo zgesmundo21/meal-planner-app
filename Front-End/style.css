@@ -1035,8 +1035,9 @@ main {
 
 .planner-grid {
     display: grid;
-    grid-template-columns: minmax(240px,.85fr) minmax(300px,1.15fr);
-    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 24px;
+    align-items: start;
 }
 
 .panel {
@@ -1069,13 +1070,6 @@ main {
     .results-panel h2 {
         margin: 8px 0 14px;
     }
-
-.plan-result {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font: 13px/1.7 'DM Sans',sans-serif;
-    color: #405848;
-}
 
 .grocery-panel {
     max-width: 760px;
@@ -2134,5 +2128,259 @@ body:has(#ai-assistant-dialog[open]) {
 
     .restriction-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================
+   AI PERSONALIZED MEAL PLANNER
+   ========================================== */
+
+#planner .form-panel,
+#planner .results-panel {
+    min-width: 0;
+}
+
+#plan-form .planner-help {
+    display: block;
+    margin: -3px 0 5px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   DIETARY RESTRICTIONS
+   ========================================== */
+
+#plan-form .planner-restrictions {
+    margin: 12px 0;
+    padding: 0;
+    min-width: 0;
+    border: none;
+}
+
+#plan-form .restriction-grid {
+    gap: 9px;
+}
+
+#plan-form .restriction-option {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+    #plan-form .restriction-option input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+        flex-shrink: 0;
+        accent-color: var(--forest);
+        box-shadow: none;
+        appearance: auto;
+    }
+
+    #plan-form .restriction-option:focus-within {
+        outline: 2px solid #9abf8f;
+        outline-offset: 2px;
+    }
+
+/* ==========================================
+   ADDITIONAL REQUIREMENTS
+   ========================================== */
+
+#plan-requirements {
+    min-height: 110px;
+    max-width: 100%;
+    resize: vertical;
+}
+
+/* ==========================================
+   ALLERGY INFORMATION
+   ========================================== */
+
+#plan-form .allergy-warning {
+    margin-top: 6px;
+}
+
+    #plan-form .allergy-warning p {
+        margin: 0;
+    }
+
+/* ==========================================
+   GENERATE MEAL PLAN BUTTON
+   ========================================== */
+
+#plan-form button[type="submit"] {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 8px;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+    #plan-form button[type="submit"]:disabled {
+        opacity: 0.65;
+        cursor: wait;
+    }
+
+/* ==========================================
+   MEAL PLAN RESULTS
+   ========================================== */
+
+.meal-plan-results {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+  
+    .meal-plan-results[hidden] {
+        display: none;
+    }
+
+/* ==========================================
+   INDIVIDUAL DAY CARDS
+   ========================================== */
+
+.meal-day-card {
+    min-width: 0;
+    padding: 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.meal-day-heading {
+    margin: 0 0 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--forest);
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+/* ==========================================
+   BREAKFAST, LUNCH AND DINNER
+   ========================================== */
+
+.planned-meal {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.planned-meal-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--sage);
+    color: var(--forest);
+    font-size: 21px;
+}
+
+.planned-meal-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.planned-meal-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--forest);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.planned-meal-details p {
+    margin: 0;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   DAILY CALORIE SUMMARY
+   ========================================== */
+
+.meal-day-total {
+    margin-top: 15px;
+    padding: 12px 14px;
+    background: var(--sage);
+    border: 1px solid #d5dfd2;
+    border-radius: 10px;
+    color: var(--forest);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   RESPONSIVE MEAL PLANNER
+   ========================================== */
+
+@media (max-width: 1050px) {
+
+    #planner .planner-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+}
+
+@media (max-width: 620px) {
+
+    #planner .form-panel,
+    #planner .results-panel {
+        padding: 18px;
+    }
+
+    #plan-form select,
+    #plan-form input[type="number"],
+    #plan-requirements {
+        font-size: 16px;
+    }
+
+    .meal-day-card {
+        padding: 15px;
+    }
+
+    .meal-day-heading {
+        font-size: 19px;
+    }
+
+    .planned-meal-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .planned-meal-details p {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    #plan-form .restriction-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #plan-form .restriction-option {
+        min-height: 42px;
+    }
+
+    .meal-day-total {
+        font-size: 12px;
     }
 }

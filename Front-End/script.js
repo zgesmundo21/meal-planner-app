@@ -1145,59 +1145,213 @@ $("#search-form").addEventListener("submit", async (e) => {
     }
 });
 
+function renderMealPlan(plan) {
+
+    const container = $("#plan-result");
+
+    container.replaceChildren();
+
+    const lines = plan
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+    let currentDay = null;
+
+    for (const line of lines) {
+
+        const dayMatch = line.match(/^Day\s+(\d+)$/i);
+
+        if (dayMatch) {
+
+            currentDay = document.createElement("article");
+            currentDay.className = "meal-day-card";
+
+            const heading = document.createElement("h3");
+            heading.className = "meal-day-heading";
+            heading.textContent = `Day ${dayMatch[1]}`;
+
+            currentDay.append(heading);
+            container.append(currentDay);
+
+            continue;
+        }
+
+        if (!currentDay) {
+            continue;
+        }
+
+        const mealMatch = line.match(
+            /^(Breakfast|Lunch|Dinner):\s*(.+)$/i
+        );
+
+        if (mealMatch) {
+
+            const mealType = mealMatch[1].toLowerCase();
+            const mealDescription = mealMatch[2];
+
+            const icons = {
+                breakfast: "☀",
+                lunch: "☼",
+                dinner: "☾"
+            };
+
+            const meal = document.createElement("div");
+            meal.className = "planned-meal";
+
+            const icon = document.createElement("span");
+            icon.className = "planned-meal-icon";
+            icon.textContent = icons[mealType];
+            icon.setAttribute("aria-hidden", "true");
+
+            const details = document.createElement("div");
+            details.className = "planned-meal-details";
+
+            const label = document.createElement("strong");
+            label.className = "planned-meal-label";
+            label.textContent = mealMatch[1];
+
+            const description = document.createElement("p");
+            description.textContent = mealDescription;
+
+            details.append(label, description);
+            meal.append(icon, details);
+            currentDay.append(meal);
+
+            continue;
+        }
+
+        const totalMatch = line.match(
+            /^Daily total:\s*(.+)$/i
+        );
+
+        if (totalMatch) {
+
+            const total = document.createElement("div");
+            total.className = "meal-day-total";
+
+            total.textContent =
+                `Estimated daily total: ${totalMatch[1]}`;
+
+            currentDay.append(total);
+        }
+    }
+
+    if (!container.children.length) {
+        throw new Error(
+            "The AI returned an unrecognized meal plan format."
+        );
+    }
+}
+
 $("#plan-form").addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
-    const submitButton = $("#plan-form button[type='submit']");
+    const submitButton =
+        $("#plan-form button[type='submit']");
 
     const goal = $("#goal").value;
-    const calories = Number($("#calories").value);
-    const days = Number($("#days").value);
 
-    if (!goal || !Number.isFinite(calories) ||
-        calories < 500 || calories > 6000 ||
-        ![3, 5, 7].includes(days)) {
+    const calories =
+        Number($("#calories").value);
+
+    const days =
+        Number($("#days").value);
+
+    const selectedRestrictions = [
+        ...document.querySelectorAll(
+            "#plan-form input[name='plan-restriction']:checked"
+        )
+    ].map(input => input.value);
+
+    const restrictions =
+        selectedRestrictions.join(", ");
+
+    const cookingTime =
+        Number($("#plan-cooking-time").value);
+
+    const requirements =
+        $("#plan-requirements").value.trim();
+
+    if (!goal ||
+        !Number.isInteger(calories) ||
+        calories < 1200 ||
+        calories > 6000 ||
+        ![3, 5, 7].includes(days) ||
+        !Number.isInteger(cookingTime) ||
+        cookingTime < 0 ||
+        cookingTime > 180 ||
+        requirements.length > 1000) {
+
         message(
             "#plan-message",
-            "Please enter valid meal-planning preferences.",
+            "Please enter valid meal planning preferences.",
             true
         );
+
         return;
     }
 
-    message("#plan-message", "Gemini is creating your meal plan...");
+    message(
+        "#plan-message",
+        "Mate is creating your personalized meal plan. "
+        + "This may take a moment..."
+    );
+
     $("#plan-result").hidden = true;
+    $("#plan-result").replaceChildren();
 
     submitButton.disabled = true;
-    submitButton.textContent = "✧ Generating your plan...";
+
+    submitButton.textContent =
+        "✧ Creating your meal plan...";
 
     try {
+
         const data = await api("/api/meal-plan", {
+
             method: "POST",
+
             body: JSON.stringify({
+
                 goal: goal,
                 calories: calories,
-                days: days
+                days: days,
+                restrictions: restrictions,
+                cookingTime: cookingTime,
+                requirements: requirements
+
             })
         });
 
         if (typeof data.plan !== "string" ||
             !data.plan.trim()) {
+
             throw new Error(
                 "The backend did not return a valid meal plan."
             );
         }
 
-        $("#plan-result").textContent = data.plan;
+        renderMealPlan(data.plan);
+
         $("#plan-result").hidden = false;
 
         message(
             "#plan-message",
-            "Your personalized meal plan is ready!"
+            "Your personalized "
+            + days
+            + "-day meal plan is ready!"
         );
 
     } catch (error) {
-        console.error("Gemini meal planner error:", error);
+
+        console.error(
+            "Gemini meal planner error:",
+            error
+        );
+
+        $("#plan-result").hidden = true;
 
         message(
             "#plan-message",
@@ -1206,8 +1360,11 @@ $("#plan-form").addEventListener("submit", async (e) => {
         );
 
     } finally {
+
         submitButton.disabled = false;
-        submitButton.textContent = "✧ Generate my meal plan";
+
+        submitButton.textContent =
+            "✧ Generate my meal plan";
     }
 });
 

@@ -246,71 +246,132 @@ int main()
             }
         }
     );
-    
+   
     server.Post("/api/meal-plan",
         [](const httplib::Request& req,
             httplib::Response& res)
         {
+            auto badRequest = [&](const std::string& error)
+                {
+                    res.status = 400;
+
+                    res.set_content(
+                        json{
+                            { "error", error }
+                        }.dump(),
+                        "application/json"
+                    );
+                };
+
+            json input = json::parse(
+                req.body,
+                nullptr,
+                false
+            );
+
+            if (!input.is_object() ||
+                !input.contains("goal") ||
+                !input["goal"].is_string() ||
+                !input.contains("calories") ||
+                !input["calories"].is_number_integer() ||
+                !input.contains("days") ||
+                !input["days"].is_number_integer())
+            {
+                badRequest("Invalid meal plan input.");
+                return;
+            }
+
+            if ((input.contains("restrictions") &&
+                !input["restrictions"].is_string()) ||
+
+                (input.contains("cookingTime") &&
+                    !input["cookingTime"].is_number_integer()) ||
+
+                (input.contains("requirements") &&
+                    !input["requirements"].is_string()))
+            {
+                badRequest("Invalid personalization preferences.");
+                return;
+            }
+
+            if (input["calories"] < 1200 ||
+                input["calories"] > 6000 ||
+                (input["days"] != 3 &&
+                    input["days"] != 5 &&
+                    input["days"] != 7))
+            {
+                badRequest("Invalid calorie target or number of days.");
+                return;
+            }
+
+            if (input.contains("cookingTime") &&
+                (input["cookingTime"] < 0 ||
+                    input["cookingTime"] > 180))
+            {
+                badRequest("Invalid cooking time.");
+                return;
+            }
+
+            std::string goal =
+                input["goal"].get<std::string>();
+
+            int calories =
+                input["calories"].get<int>();
+
+            int days =
+                input["days"].get<int>();
+
+            std::string restrictions =
+                input.value("restrictions", std::string(""));
+
+            int cookingTime =
+                input.value("cookingTime", 0);
+
+            std::string requirements =
+                input.value("requirements", std::string(""));
+
+            if (goal.find_first_not_of(" \t\r\n")
+                == std::string::npos ||
+                goal.size() > 200 ||
+                restrictions.size() > 2000 ||
+                requirements.size() > 1000)
+            {
+                badRequest("Invalid meal planning preferences.");
+                return;
+            }
+
             try
             {
-                json input = json::parse(req.body);
-
-                if (!input.is_object() ||
-                    !input.contains("goal") ||
-                    !input["goal"].is_string() ||
-                    !input.contains("calories") ||
-                    !input["calories"].is_number_integer() ||
-                    !input.contains("days") ||
-                    !input["days"].is_number_integer())
-                {
-                    res.status = 400;
-                    res.set_content(
-                        json{ { "error", "Invalid meal plan input." } }.dump(),
-                        "application/json"
-                    );
-                    return;
-                }
-
-                std::string goal =
-                    input["goal"].get<std::string>();
-
-                int calories = input["calories"].get<int>();
-                int days = input["days"].get<int>();
-
-                if (goal.empty() || goal.size() > 200 ||
-                    calories < 500 || calories > 6000 ||
-                    (days != 3 && days != 5 && days != 7))
-                {
-                    res.status = 400;
-                    res.set_content(
-                        json{ { "error", "Invalid meal planning values." } }.dump(),
-                        "application/json"
-                    );
-                    return;
-                }
-
                 AIClient ai;
 
                 std::cout
-                    << "Generating Gemini meal plan..."
+                    << "Generating personalized Gemini meal plan..."
                     << std::endl;
 
                 std::string plan =
-                    ai.generateMealPlan(goal, calories, days);
+                    ai.generateMealPlan(
+                        goal,
+                        calories,
+                        days,
+                        restrictions,
+                        cookingTime,
+                        requirements
+                    );
 
                 res.set_content(
-                    json{ { "plan", plan } }.dump(),
+                    json{
+                        { "plan", plan },
+                        { "days", days },
+                        { "calories", calories }
+                    }.dump(),
                     "application/json"
                 );
+
+                std::cout
+                    << "AI meal plan generated successfully."
+                    << std::endl;
             }
-            catch (const json::exception&)
-            {
-                res.status = 400;
-                res.set_content(
-                    json{ { "error", "Invalid JSON request." } }.dump(),
-                    "application/json"
-                );
-            }
+
             catch (const std::exception& e)
             {
                 std::cerr
@@ -319,8 +380,15 @@ int main()
                     << std::endl;
 
                 res.status = 502;
+
                 res.set_content(
-                    json{ { "error", "Meal plan generation failed." } }.dump(),
+                    json{
+                        {
+                            "error",
+                            "Meal plan generation failed. "
+                            "Please try again."
+                        }
+                    }.dump(),
                     "application/json"
                 );
             }

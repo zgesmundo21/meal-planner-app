@@ -2408,15 +2408,13 @@ body:has(#ai-assistant-dialog[open]) {
     margin: 0;
     color: var(--muted, #78887c);
     font-size: 13px;
-    font-weight: 500;
     text-align: center;
 }
 
 .recipe-progress {
     width: 180px;
-    max-width: 100%;
     height: 5px;
-    background: var(--sage);
+    background: var(--sage, #e7eee3);
     border-radius: 20px;
     overflow: hidden;
 }
@@ -2424,7 +2422,7 @@ body:has(#ai-assistant-dialog[open]) {
 .recipe-progress-fill {
     width: 0%;
     height: 100%;
-    background: var(--forest);
+    background: var(--forest, #234c3b);
     border-radius: 20px;
     transition: width 0.35s ease;
 }
@@ -2432,65 +2430,31 @@ body:has(#ai-assistant-dialog[open]) {
 .load-more-button {
     min-width: 220px;
     padding: 14px 26px;
-    border: 1px solid var(--forest);
+    border: 1px solid var(--forest, #234c3b);
     border-radius: 12px;
-    background: var(--forest);
+    background: var(--forest, #234c3b);
     color: #ffffff;
     font-family: inherit;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(35, 76, 59, 0.12);
-    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.2s ease;
 }
 
     .load-more-button:hover:not(:disabled) {
-        background: var(--deep);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(35, 76, 59, 0.18);
-    }
-
-    .load-more-button:active:not(:disabled) {
-        transform: translateY(0);
-    }
-
-    .load-more-button:focus-visible {
-        outline: 2px solid var(--forest);
-        outline-offset: 4px;
+        background: var(--deep, #193e30);
     }
 
     .load-more-button:disabled {
         opacity: 0.65;
         cursor: wait;
-        transform: none;
     }
 
 @media (max-width: 480px) {
 
-    .recipe-pagination {
-        margin-top: 24px;
-        padding: 18px 0;
-    }
-
     .load-more-button {
         width: 100%;
-        max-width: 320px;
         min-width: 0;
+        max-width: 320px;
     }
-
-    .recipe-progress {
-        width: 150px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-    .load-more-button,
-    .recipe-progress-fill {
-        transition: none;
-    }
-
-        .load-more-button:hover:not(:disabled) {
-            transform: none;
-        }
 }

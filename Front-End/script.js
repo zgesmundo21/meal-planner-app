@@ -1119,20 +1119,34 @@ window.addEventListener("hashchange", navigate);
 function updateRecipePagination() {
 
     const pagination = $("#recipe-pagination");
-
     const loadMoreButton = $("#load-more-recipes");
-
     const count = $("#recipe-count");
-
     const progress = $("#recipe-progress-fill");
+
+    if (!pagination || !loadMoreButton ||
+        !count || !progress) {
+
+        console.error(
+            "Missing recipe pagination HTML elements."
+        );
+
+        return;
+    }
+
+    console.log("Recipe pagination:", {
+        displayed: searchResults.length,
+        total: totalRecipeResults,
+        offset: recipeOffset,
+        hasMore: hasMoreRecipes,
+        loading: isLoadingRecipes
+    });
 
     pagination.hidden = searchResults.length === 0;
 
     const displayed = searchResults.length;
 
     count.textContent =
-        `Showing ${displayed.toLocaleString()} of `
-        + `${totalRecipeResults.toLocaleString()} recipes`;
+        `Showing ${displayed} of ${totalRecipeResults} recipes`;
 
     const percentage =
         totalRecipeResults > 0
@@ -1291,28 +1305,24 @@ async function fetchRecipes(reset = false) {
     }
 }
 
-$("#search-form").addEventListener(
-    "submit",
-    async (e) => {
+$("#search-form").addEventListener("submit", async (e) => {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        if (isLoadingRecipes) {
-            return;
-        }
-
-        const query =
-            $("#recipe-query").value.trim();
-
-        if (!query) {
-            return;
-        }
-
-        currentRecipeQuery = query;
-
-        await fetchRecipes(true);
+    if (isLoadingRecipes) {
+        return;
     }
-);
+
+    const query = $("#recipe-query").value.trim();
+
+    if (!query) {
+        return;
+    }
+
+    currentRecipeQuery = query;
+
+    await fetchRecipes(true);
+});
 
 $("#load-more-recipes").addEventListener(
     "click",
@@ -1327,6 +1337,7 @@ $("#load-more-recipes").addEventListener(
         await fetchRecipes(false);
     }
 );
+
 function renderMealPlan(plan) {
 
     const container = $("#plan-result");
